@@ -5,264 +5,186 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minha Dieta Semanal</title>
     <style>
-        :root {
-            --primary-color: rgb(24, 179, 173);
-            --secondary-color:#f1f1f1;
-            --text-color: #333;
-            --border-color: #ddd;
-            --success-color: #4caf50;
-            --warning-color: #ff9800;
-            --danger-color: #f44336;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 10px; /* Reduzido de 20px */
-            background-color: #f5f5f5;
-            color: var(--text-color);
-            font-size: 13px; /* Adicionado para diminuir o texto */
-        }
-        
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-        
-        h1, h2, h3 {
-            color: var(--primary-color);
-            margin-top: 0;
-            margin-bottom: 8px; /* Reduzido */
-        }
-        
-        h1 {
-            text-align: center;
-            margin-bottom: 15px; /* Reduzido de 30px */
-            font-size: 1.5em; /* Reduzido */
-        }
-        
-        /* Estilos do formulário de meta */
-        .meta-form {
-            background-color: white;
-            border-radius: 6px; /* Reduzido */
-            box-shadow: 0 1px 4px rgba(0,0,0,0.1); /* Reduzido */
-            padding: 10px; /* Reduzido de 20px */
-            margin-bottom: 15px; /* Reduzido de 30px */
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px; /* Reduzido */
-            align-items: center;
-        }
-        
-        .form-group {
-            flex-grow: 1;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 2px; /* Reduzido de 5px */
-            font-weight: bold;
-            font-size: 12px; /* Reduzido */
-        }
-        
-        input {
-            width: 100%;
-            padding: 6px; /* Reduzido de 10px */
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            box-sizing: border-box;
-            font-size: inherit;
-        }
-        
-        .btn {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 6px 12px; /* Reduzido de 10px 20px */
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background-color 0.3s;
-            align-self: flex-end;
-            font-size: inherit;
-        }
-        
-        .btn:hover {
-            background-color: #388e3c;
-        }
-        
-        /* Estilos da semana */
-        .semana {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr); /* Sempre 7 colunas para os 7 dias */
-            gap: 10px; /* Reduzido de 20px */
-        }
-        
-        .dia-card {
-            background-color: white;
-            border-radius: 6px; /* Reduzido */
-            box-shadow: 0 1px 4px rgba(0,0,0,0.1); /* Reduzido */
-            overflow: hidden;
-        }
-        
-        .dia-header {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 6px 10px; /* Reduzido de 15px */
-            font-weight: bold;
-            text-align: center;
-            font-size: 14px; /* Reduzido */
-        }
-        
-        .dia-body {
-            padding: 8px; /* Reduzido de 20px */
-        }
-        
-        .refeicao {
-            margin-bottom: 8px; /* Reduzido de 20px */
-        }
-        
-        .refeicao h3 {
-            margin-top: 0;
-            margin-bottom: 4px; /* Reduzido */
-            font-size: 13px; /* Reduzido */
-            color: var(--text-color);
-        }
-        
-        .refeicao-inputs {
-            display: flex;
-            gap: 4px; /* Reduzido de 10px */
-        }
-        
-        .refeicao-descricao {
-            flex-grow: 1;
-        }
-        
-        .refeicao-calorias {
-            width: 60px; /* Reduzido de 100px */
-        }
-        
-        .dia-footer {
-            background-color: var(--secondary-color);
-            padding: 6px 10px; /* Reduzido de 15px */
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 11px; /* Reduzido */
-        }
-        
-        .calorias-totais {
-            font-weight: bold;
-        }
-        
-        .status {
-            padding: 3px 6px; /* Reduzido de 5px 10px */
-            border-radius: 3px; /* Reduzido */
-            color: white;
-            font-weight: bold;
-            font-size: 10px; /* Reduzido */
-        }
-        
-        .status-success {
-            background-color: var(--success-color);
-        }
-        
-        .status-warning {
-            background-color: var(--warning-color);
-        }
-        
-        .status-danger {
-            background-color: var(--danger-color);
-        }
-        
-        /* Sumário semanal */
-        .sumario {
-            background-color: white;
-            border-radius: 6px; /* Reduzido */
-            box-shadow: 0 1px 4px rgba(0,0,0,0.1); /* Reduzido */
-            padding: 10px; /* Reduzido de 20px */
-            margin-top: 15px; /* Reduzido de 30px */
-        }
-        
-        .sumario h2 {
-            margin-top: 0;
-            border-bottom: 2px solid var(--primary-color);
-            padding-bottom: 6px; /* Reduzido */
-            font-size: 16px; /* Reduzido */
-        }
-        
-        .sumario-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr); /* Sempre 4 colunas */
-            gap: 10px; /* Reduzido */
-            margin-top: 10px; /* Reduzido */
-        }
-        
-        .sumario-item {
-            background-color: var(--secondary-color);
-            padding: 8px; /* Reduzido de 15px */
-            border-radius: 4px;
-            text-align: center;
-            font-size: 12px; /* Reduzido */
-        }
-        
-        .sumario-valor {
-            font-size: 18px; /* Reduzido de 24px */
-            font-weight: bold;
-            margin: 6px 0; /* Reduzido */
-        }
-        
-        /* Botão flutuante de voltar */
-        .botao-voltar {
-            position: fixed;
-            bottom: 10px; /* Reduzido de 20px */
-            right: 10px; /* Reduzido de 20px */
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 40px; /* Reduzido de 60px */
-            height: 40px; /* Reduzido de 60px */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2); /* Reduzido */
-            transition: all 0.3s;
-            z-index: 90;
-            font-size: 18px; /* Reduzido de 24px */
-        }
-        
-        .botao-voltar:hover {
-            background-color: #388e3c;
-            transform: scale(1.1);
-        }
-        
-        /* Status de salvamento */
-        #status-salvamento {
-            position: fixed;
-            bottom: 10px; /* Reduzido de 20px */
-            left: 10px; /* Reduzido de 20px */
-            padding: 6px 12px; /* Reduzido */
-            border-radius: 4px;
-            background-color: rgba(0,0,0,0.7);
-            color: white;
-            font-size: 12px; /* Reduzido */
-            opacity: 0;
-            transition: opacity 0.5s;
-            z-index: 90;
-        }
-        
-        #status-salvamento.visivel {
-            opacity: 1;
-        }
+   
+      body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 15px; /* Aumentado um pouco o padding geral */
+    background-color: #f5f5f5;
+    color: var(--text-color);
+    font-size: 15px; /* Aumentado para melhor legibilidade */
+}
+
+h1 {
+    text-align: center;
+    color: var(--primary-color);
+    margin-bottom: 25px; /* Ajustado */
+    font-size: 2.2em; /* Mais destaque para o título principal */
+}
+
+h2 {
+    color: var(--primary-color);
+    margin-top: 20px; /* Adicionado espaço acima dos h2 */
+    margin-bottom: 12px; /* Ajustado */
+    font-size: 1.6em; /* Mais destaque */
+}
+
+h3 {
+    color: var(--text-color); /* Usando a cor de texto padrão */
+    margin-top: 10px;
+    margin-bottom: 5px;
+    font-size: 1.2em; /* Tamanho bom para subtítulos de refeição */
+}
+
+/* Estilos das novas seções */
+.secao-planejamento, .secao-registro-diario {
+    background-color: white;
+    border-radius: 8px; /* Arredondamento maior */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1); /* Sombra mais visível */
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+/* Meta Form e Botões - Ajustes */
+.meta-form {
+    border-radius: 8px; /* Consistente com as novas seções */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: center;
+}
+
+.btn {
+    padding: 10px 20px;
+    border-radius: 6px; /* Mais arredondado */
+    font-size: 1em;
+}
+
+.btn-secondary {
+    background-color: #6c757d; /* Um cinza mais neutro */
+    color: white;
+}
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+.btn-success { /* Novo estilo para botões de sucesso */
+    background-color: var(--button-success-color, #28a745);
+    color: white;
+}
+.btn-success:hover {
+    background-color: #218838;
+}
+.btn-danger { /* Novo estilo para botões de perigo */
+    background-color: var(--button-danger-color, #dc3545);
+    color: white;
+}
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+/* Layout dos Dias - Melhoria de Responsividade */
+.semana {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Adaptativo: no mínimo 280px por coluna */
+    gap: 20px; /* Aumentado o espaçamento entre os cards */
+}
+
+@media (max-width: 768px) {
+    .semana {
+        grid-template-columns: 1fr; /* Em telas pequenas, uma coluna por dia */
+    }
+}
+
+/* Estilo do Card do Dia (mantido, mas ajustado para legibilidade) */
+.dia-card {
+    border-radius: 8px; /* Consistente com as seções */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Sombra mais suave */
+}
+
+.dia-header {
+    padding: 10px 15px; /* Aumentado */
+    font-size: 1.1em; /* Mais legível */
+}
+
+.dia-body {
+    padding: 15px; /* Aumentado */
+}
+
+.refeicao {
+    margin-bottom: 15px; /* Mais espaço entre as refeições */
+}
+
+.refeicao-inputs {
+    display: flex;
+    align-items: center; /* Alinha verticalmente inputs e checkbox */
+    gap: 8px; /* Aumentado o espaçamento entre os campos */
+}
+
+.refeicao-descricao {
+    flex-grow: 3; /* Mais espaço para a descrição */
+}
+
+.refeicao-calorias {
+    width: 90px; /* Um pouco mais largo para os números */
+    text-align: center;
+}
+
+/* Novo estilo para o checkbox da refeição */
+.refeicao-checkbox {
+    width: 20px; /* Tamanho do checkbox */
+    height: 20px;
+    cursor: pointer;
+    margin-left: 5px; /* Espaço entre o input de calorias e o checkbox */
+    transform: scale(1.2); /* Aumenta um pouco o checkbox para ser mais fácil de clicar */
+}
+
+/* Sumário Semanal - Ajustes */
+.sumario {
+    border-radius: 8px; /* Consistente */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    padding: 20px;
+}
+
+.sumario-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Adaptativo */
+    gap: 15px;
+}
+
+.sumario-item {
+    padding: 12px; /* Aumentado */
+    font-size: 0.9em;
+}
+
+.sumario-valor {
+    font-size: 1.8em; /* Maior e mais legível */
+}
+
+/* Botão de voltar e status de salvamento - Ajustes para melhor visibilidade */
+.botao-voltar {
+    width: 50px; /* Um pouco maior */
+    height: 50px;
+    font-size: 22px;
+    bottom: 15px;
+    right: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+#status-salvamento {
+    padding: 8px 15px;
+    font-size: 13px;
+    bottom: 15px;
+    left: 15px;
+}
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Minha Dieta Semanal</h1>
-        
-        <!-- Formulário de meta calórica -->
+
         <div class="meta-form">
             <div class="form-group">
                 <label for="meta-calorias">Meta de Calorias Diárias:</label>
@@ -270,341 +192,439 @@
             </div>
             <button id="definir-meta" class="btn">Definir Meta</button>
         </div>
-        
-        <!-- Dias da semana -->
-        <div class="semana" id="dias-semana">
-            <!-- Os cards dos dias serão gerados via JavaScript -->
+
+        <div class="secao-planejamento">
+            <h2>Planejar Dieta Semanal</h2>
+            <button id="mostrar-planejamento" class="btn btn-secondary" style="margin-bottom: 15px;">Mostrar Planejamento da Semana</button>
+            <div id="planejamento-semana" class="semana" style="display: none;">
+                </div>
         </div>
-        
-        <!-- Sumário semanal -->
+
+        <div class="secao-registro-diario">
+            <h2 id="titulo-dia-atual">Registro do Dia: <span id="nome-dia-atual"></span></h2>
+            <div id="registro-dia-atual" class="dia-card">
+                </div>
+             <button id="dia-cumprido-btn" class="btn btn-success" style="margin-top: 15px;">Marcar Dia como Cumprido</button>
+             <button id="dia-nao-cumprido-btn" class="btn btn-danger" style="margin-top: 15px;">Marcar Dia como Não Cumprido</button>
+        </div>
+
         <div class="sumario">
-            <h2>Sumário Semanal</h2>
-            <div class="sumario-grid">
-                <div class="sumario-item">
-                    <div>Média Diária</div>
-                    <div id="media-diaria" class="sumario-valor">0</div>
-                    <div>calorias</div>
-                </div>
-                <div class="sumario-item">
-                    <div>Dia com Mais Calorias</div>
-                    <div id="maior-dia" class="sumario-valor">-</div>
-                    <div id="maior-dia-valor">0 calorias</div>
-                </div>
-                <div class="sumario-item">
-                    <div>Dia com Menos Calorias</div>
-                    <div id="menor-dia" class="sumario-valor">-</div>
-                    <div id="menor-dia-valor">0 calorias</div>
-                </div>
-                <div class="sumario-item">
-                    <div>Status da Meta</div>
-                    <div id="status-meta" class="sumario-valor">-</div>
-                    <div id="status-meta-descricao">Defina uma meta</div>
-                </div>
             </div>
-        </div>
     </div>
     
-    <!-- Botão de voltar -->
-    <a href="index.html" class="botao-voltar" title="Voltar à página principal">⬅</a>
-    
-    <!-- Status de salvamento -->
-    <div id="status-salvamento">Dados salvos!</div>
-    
     <script>
-        // Elementos DOM
-        const diasSemana = document.getElementById('dias-semana');
-        const metaCaloriasInput = document.getElementById('meta-calorias');
-        const definirMetaBtn = document.getElementById('definir-meta');
-        const mediaDiaria = document.getElementById('media-diaria');
-        const maiorDia = document.getElementById('maior-dia');
-        const maiorDiaValor = document.getElementById('maior-dia-valor');
-        const menorDia = document.getElementById('menor-dia');
-        const menorDiaValor = document.getElementById('menor-dia-valor');
-        const statusMeta = document.getElementById('status-meta');
-        const statusMetaDescricao = document.getElementById('status-meta-descricao');
-        const statusSalvamento = document.getElementById('status-salvamento');
-        
-        // Nomes dos dias da semana
-        const diasDaSemana = ["Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado"];
-        
-        // Refeições para cada dia
-        const refeicoes = ["Café da Manhã", "Almoço", "Lanche 1", "Lanche 2", "Jantar"];
-        
-        // Objeto para armazenar os dados da dieta
-        let dieta = {
-            meta: 0,
-            dias: {}
-        };
-        
-        // Inicializar os dias da semana
-        function inicializarDias() {
-            diasSemana.innerHTML = "";
-            
-            diasDaSemana.forEach((dia, index) => {
-                // Criar o card do dia
-                const diaCard = document.createElement('div');
-                diaCard.className = 'dia-card';
-                
-                // Criar o cabeçalho do dia
-                const diaHeader = document.createElement('div');
-                diaHeader.className = 'dia-header';
-                diaHeader.textContent = dia;
-                
-                // Criar o corpo do dia
-                const diaBody = document.createElement('div');
-                diaBody.className = 'dia-body';
-                
-                // Adicionar campos para cada refeição
-                refeicoes.forEach(refeicao => {
-                    const refeicaoDiv = document.createElement('div');
-                    refeicaoDiv.className = 'refeicao';
-                    
-                    const refeicaoTitulo = document.createElement('h3');
-                    refeicaoTitulo.textContent = refeicao;
-                    
-                    const refeicaoInputs = document.createElement('div');
-                    refeicaoInputs.className = 'refeicao-inputs';
-                    
-                    const descricaoInput = document.createElement('input');
-                    descricaoInput.type = 'text';
-                    descricaoInput.className = 'refeicao-descricao';
-                    descricaoInput.placeholder = 'Descrição';
-                    descricaoInput.dataset.dia = dia;
-                    descricaoInput.dataset.refeicao = refeicao;
-                    descricaoInput.dataset.tipo = 'descricao';
-                    descricaoInput.value = (dieta.dias[dia] && dieta.dias[dia][refeicao]) 
-                        ? dieta.dias[dia][refeicao].descricao || '' 
-                        : '';
-                    
-                    const caloriasInput = document.createElement('input');
-                    caloriasInput.type = 'number';
-                    caloriasInput.className = 'refeicao-calorias';
-                    caloriasInput.placeholder = 'Calorias';
-                    caloriasInput.min = '0';
-                    caloriasInput.dataset.dia = dia;
-                    caloriasInput.dataset.refeicao = refeicao;
-                    caloriasInput.dataset.tipo = 'calorias';
-                    caloriasInput.value = (dieta.dias[dia] && dieta.dias[dia][refeicao]) 
-                        ? dieta.dias[dia][refeicao].calorias || '' 
-                        : '';
-                    
-                    // Adicionar listeners para salvar automaticamente
-                    descricaoInput.addEventListener('change', salvarRefeicao);
-                    caloriasInput.addEventListener('change', salvarRefeicao);
-                    
-                    refeicaoInputs.appendChild(descricaoInput);
-                    refeicaoInputs.appendChild(caloriasInput);
-                    
-                    refeicaoDiv.appendChild(refeicaoTitulo);
-                    refeicaoDiv.appendChild(refeicaoInputs);
-                    
-                    diaBody.appendChild(refeicaoDiv);
-                });
-                
-                // Criar o rodapé do dia com o total de calorias
-                const diaFooter = document.createElement('div');
-                diaFooter.className = 'dia-footer';
-                
-                const caloriasTotais = document.createElement('div');
-                caloriasTotais.className = 'calorias-totais';
-                caloriasTotais.id = `calorias-totais-${dia.toLowerCase()}`;
-                caloriasTotais.textContent = `Total: 0 calorias`;
-                
-                const statusDiv = document.createElement('div');
-                statusDiv.className = 'status';
-                statusDiv.id = `status-${dia.toLowerCase()}`;
-                statusDiv.textContent = 'Sem meta';
-                
-                diaFooter.appendChild(caloriasTotais);
-                diaFooter.appendChild(statusDiv);
-                
-                // Montar o card completo
-                diaCard.appendChild(diaHeader);
-                diaCard.appendChild(diaBody);
-                diaCard.appendChild(diaFooter);
-                
-                // Adicionar o card ao container
-                diasSemana.appendChild(diaCard);
+    // Elementos DOM
+    const metaCaloriasInput = document.getElementById('meta-calorias');
+    const definirMetaBtn = document.getElementById('definir-meta');
+    const mediaDiaria = document.getElementById('media-diaria');
+    const maiorDia = document.getElementById('maior-dia');
+    const maiorDiaValor = document.getElementById('maior-dia-valor');
+    const menorDia = document.getElementById('menor-dia');
+    const menorDiaValor = document.getElementById('menor-dia-valor');
+    const statusMeta = document.getElementById('status-meta');
+    const statusMetaDescricao = document.getElementById('status-meta-descricao');
+    const statusSalvamento = document.getElementById('status-salvamento');
+
+    // NOVOS ELEMENTOS
+    const planejamentoSemanaContainer = document.getElementById('planejamento-semana');
+    const mostrarPlanejamentoBtn = document.getElementById('mostrar-planejamento');
+    const nomeDiaAtualSpan = document.getElementById('nome-dia-atual');
+    const registroDiaAtualContainer = document.getElementById('registro-dia-atual');
+    const diaCumpridoBtn = document.getElementById('dia-cumprido-btn');
+    const diaNaoCumpridoBtn = document.getElementById('dia-nao-cumprido-btn');
+
+    // Nomes dos dias da semana
+    const diasDaSemana = ["Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado"];
+
+    // Refeições para cada dia
+    const refeicoes = ["Café da Manhã", "Almoço", "Lanche 1", "Lanche 2", "Jantar"];
+
+    // Objeto para armazenar os dados da dieta
+    let dieta = {
+        meta: 0,
+        planejamento: {}, // Armazenará o plano semanal (descrição e calorias)
+        registroDiario: {}, // Armazenará o status do que foi feito em cada dia
+        ultimaAtualizacaoDiaria: '' // Para saber a última vez que o dia foi marcado (útil para Progresso)
+    };
+
+    // Inicializar os dias da semana para o PLANEJAMENTO (cards de input completo)
+    function inicializarPlanejamentoSemanal() {
+        planejamentoSemanaContainer.innerHTML = "";
+
+        diasDaSemana.forEach((dia, index) => {
+            const diaCard = document.createElement('div');
+            diaCard.className = 'dia-card';
+
+            const diaHeader = document.createElement('div');
+            diaHeader.className = 'dia-header';
+            diaHeader.textContent = dia;
+
+            const diaBody = document.createElement('div');
+            diaBody.className = 'dia-body';
+
+            refeicoes.forEach(refeicao => {
+                const refeicaoDiv = document.createElement('div');
+                refeicaoDiv.className = 'refeicao';
+
+                const refeicaoTitulo = document.createElement('h3');
+                refeicaoTitulo.textContent = refeicao;
+
+                const refeicaoInputs = document.createElement('div');
+                refeicaoInputs.className = 'refeicao-inputs';
+
+                const descricaoInput = document.createElement('input');
+                descricaoInput.type = 'text';
+                descricaoInput.className = 'refeicao-descricao';
+                descricaoInput.placeholder = 'Descrição';
+                descricaoInput.dataset.dia = dia;
+                descricaoInput.dataset.refeicao = refeicao;
+                descricaoInput.dataset.tipo = 'descricao';
+                descricaoInput.value = (dieta.planejamento[dia] && dieta.planejamento[dia][refeicao])
+                    ? dieta.planejamento[dia][refeicao].descricao || ''
+                    : '';
+
+                const caloriasInput = document.createElement('input');
+                caloriasInput.type = 'number';
+                caloriasInput.className = 'refeicao-calorias';
+                caloriasInput.placeholder = 'Calorias';
+                caloriasInput.min = '0';
+                caloriasInput.dataset.dia = dia;
+                caloriasInput.dataset.refeicao = refeicao;
+                caloriasInput.dataset.tipo = 'calorias';
+                caloriasInput.value = (dieta.planejamento[dia] && dieta.planejamento[dia][refeicao])
+                    ? dieta.planejamento[dia][refeicao].calorias || ''
+                    : '';
+
+                descricaoInput.addEventListener('change', salvarPlanejamentoRefeicao);
+                caloriasInput.addEventListener('change', salvarPlanejamentoRefeicao);
+
+                refeicaoInputs.appendChild(descricaoInput);
+                refeicaoInputs.appendChild(caloriasInput);
+
+                refeicaoDiv.appendChild(refeicaoTitulo);
+                refeicaoDiv.appendChild(refeicaoInputs);
+
+                diaBody.appendChild(refeicaoDiv);
             });
-            
-            // Atualizar os totais
-            atualizarTotais();
-        }
-        
-        // Salvar dados de uma refeição
-        function salvarRefeicao(event) {
-            const dia = event.target.dataset.dia;
-            const refeicao = event.target.dataset.refeicao;
-            const tipo = event.target.dataset.tipo;
-            const valor = event.target.value;
-            
-            // Inicializar o dia se necessário
-            if (!dieta.dias[dia]) {
-                dieta.dias[dia] = {};
-            }
-            
-            // Inicializar a refeição se necessária
-            if (!dieta.dias[dia][refeicao]) {
-                dieta.dias[dia][refeicao] = {
-                    descricao: '',
-                    calorias: 0
-                };
-            }
-            
-            // Atualizar o campo apropriado
-            if (tipo === 'descricao') {
-                dieta.dias[dia][refeicao].descricao = valor;
-            } else if (tipo === 'calorias') {
-                dieta.dias[dia][refeicao].calorias = parseInt(valor) || 0;
-            }
-            
-            // Salvar os dados e atualizar totais
-            salvarDieta();
-            atualizarTotais();
-            mostrarStatusSalvamento();
-        }
-        
-        // Atualizar totais de calorias para cada dia
-        function atualizarTotais() {
-            let totalSemana = 0;
-            let diasComDados = 0;
-            let maiorCalorias = 0;
-            let maiorCaloriasDia = '';
-            let menorCalorias = Infinity;
-            let menorCaloriasDia = '';
-            
-            diasDaSemana.forEach(dia => {
-                let totalDia = 0;
-                
-                // Somar calorias de todas as refeições do dia
-                if (dieta.dias[dia]) {
-                    Object.keys(dieta.dias[dia]).forEach(refeicao => {
-                        const calorias = parseInt(dieta.dias[dia][refeicao].calorias) || 0;
-                        totalDia += calorias;
-                    });
-                }
-                
-                // Atualizar o elemento de total do dia
-                const totalElement = document.getElementById(`calorias-totais-${dia.toLowerCase()}`);
-                if (totalElement) {
-                    totalElement.textContent = `Total: ${totalDia} calorias`;
-                }
-                
-                // Atualizar o status do dia em relação à meta
-                const statusElement = document.getElementById(`status-${dia.toLowerCase()}`);
-                if (statusElement) {
-                    if (!dieta.meta) {
-                        statusElement.textContent = 'Sem meta';
-                        statusElement.className = 'status';
-                    } else if (totalDia === 0) {
-                        statusElement.textContent = 'Não preenchido';
-                        statusElement.className = 'status';
-                    } else if (totalDia <= dieta.meta) {
-                        statusElement.textContent = 'Dentro da meta';
-                        statusElement.className = 'status status-success';
-                    } else if (totalDia <= dieta.meta * 1.1) {
-                        statusElement.textContent = 'Pouco acima';
-                        statusElement.className = 'status status-warning';
-                    } else {
-                        statusElement.textContent = 'Acima da meta';
-                        statusElement.className = 'status status-danger';
-                    }
-                }
-                
-                // Atualizar estatísticas gerais
-                if (totalDia > 0) {
-                    totalSemana += totalDia;
-                    diasComDados++;
-                    
-                    if (totalDia > maiorCalorias) {
-                        maiorCalorias = totalDia;
-                        maiorCaloriasDia = dia;
-                    }
-                    
-                    if (totalDia < menorCalorias) {
-                        menorCalorias = totalDia;
-                        menorCaloriasDia = dia;
-                    }
-                }
-            });
-            
-            // Atualizar sumário semanal
-            const media = diasComDados > 0 ? Math.round(totalSemana / diasComDados) : 0;
-            mediaDiaria.textContent = media;
-            
-            if (maiorCaloriasDia) {
-                maiorDia.textContent = maiorCaloriasDia.substring(0, 3);
-                maiorDiaValor.textContent = `${maiorCalorias} calorias`;
-            }
-            
-            if (menorCaloriasDia && menorCalorias !== Infinity) {
-                menorDia.textContent = menorCaloriasDia.substring(0, 3);
-                menorDiaValor.textContent = `${menorCalorias} calorias`;
-            }
-            
-            // Atualizar status da meta
-            if (!dieta.meta) {
-                statusMeta.textContent = '-';
-                statusMetaDescricao.textContent = 'Defina uma meta';
-            } else {
-                if (media === 0) {
-                    statusMeta.textContent = '-';
-                    statusMetaDescricao.textContent = 'Adicione refeições';
-                } else if (media <= dieta.meta) {
-                    statusMeta.textContent = '✓';
-                    statusMeta.style.color = 'var(--success-color)';
-                    statusMetaDescricao.textContent = `${dieta.meta - media} calorias abaixo`;
-                } else {
-                    statusMeta.textContent = '!';
-                    statusMeta.style.color = 'var(--danger-color)';
-                    statusMetaDescricao.textContent = `${media - dieta.meta} calorias acima`;
-                }
-            }
-        }
-        
-        // Definir a meta de calorias
-        function definirMeta() {
-            const meta = parseInt(metaCaloriasInput.value) || 0;
-            dieta.meta = meta;
-            
-            salvarDieta();
-            atualizarTotais();
-            
-            mostrarStatusSalvamento('Meta definida com sucesso!');
-        }
-        
-        // Salvar dieta no localStorage
-        function salvarDieta() {
-            localStorage.setItem('dieta', JSON.stringify(dieta));
-        }
-        
-        // Carregar dieta do localStorage
-        function carregarDieta() {
-            const dietaSalva = localStorage.getItem('dieta');
-            if (dietaSalva) {
-                dieta = JSON.parse(dietaSalva);
-                metaCaloriasInput.value = dieta.meta || '';
-            }
-        }
-        
-        // Mostrar status de salvamento
-        function mostrarStatusSalvamento(mensagem = 'Dados salvos!') {
-            statusSalvamento.textContent = mensagem;
-            statusSalvamento.classList.add('visivel');
-            
-            setTimeout(() => {
-                statusSalvamento.classList.remove('visivel');
-            }, 2000);
-        }
-        
-        // Event listeners
-        definirMetaBtn.addEventListener('click', definirMeta);
-        
-        // Inicialização
-        window.addEventListener('load', () => {
-            carregarDieta();
-            inicializarDias();
+
+            const diaFooter = document.createElement('div');
+            diaFooter.className = 'dia-footer';
+
+            const caloriasTotais = document.createElement('div');
+            caloriasTotais.className = 'calorias-totais';
+            caloriasTotais.id = `calorias-totais-planejamento-${dia.toLowerCase()}`;
+            caloriasTotais.textContent = `Total: 0 calorias`;
+
+            diaFooter.appendChild(caloriasTotais);
+
+            diaCard.appendChild(diaHeader);
+            diaCard.appendChild(diaBody);
+            diaCard.appendChild(diaFooter);
+
+            planejamentoSemanaContainer.appendChild(diaCard);
         });
-    </script>
+    }
+
+    // Salvar dados de uma refeição no PLANEJAMENTO
+    function salvarPlanejamentoRefeicao(event) {
+        const dia = event.target.dataset.dia;
+        const refeicao = event.target.dataset.refeicao;
+        const tipo = event.target.dataset.tipo;
+        const valor = event.target.value;
+
+        if (!dieta.planejamento[dia]) {
+            dieta.planejamento[dia] = {};
+        }
+        if (!dieta.planejamento[dia][refeicao]) {
+            dieta.planejamento[dia][refeicao] = {
+                descricao: '',
+                calorias: 0
+            };
+        }
+
+        if (tipo === 'descricao') {
+            dieta.planejamento[dia][refeicao].descricao = valor;
+        } else if (tipo === 'calorias') {
+            dieta.planejamento[dia][refeicao].calorias = parseInt(valor) || 0;
+        }
+
+        salvarDieta();
+        atualizarTotais();
+        mostrarStatusSalvamento();
+    }
+
+    // Inicializar o registro do dia atual (card com checkboxes)
+    function inicializarRegistroDiario() {
+        const hoje = new Date();
+        const dataHoje = hoje.toISOString().split('T')[0]; // Formato YYYY-MM-DD
+        const nomeDiaSemana = diasDaSemana[hoje.getDay()];
+
+        nomeDiaAtualSpan.textContent = nomeDiaSemana;
+        registroDiaAtualContainer.innerHTML = '';
+
+        const planoDoDia = dieta.planejamento[nomeDiaSemana] || {};
+
+        let totalCaloriasDiaAtual = 0; // Para somar as calorias do plano do dia
+
+        refeicoes.forEach(refeicao => {
+            const refeicaoDiv = document.createElement('div');
+            refeicaoDiv.className = 'refeicao';
+
+            const refeicaoTitulo = document.createElement('h3');
+            refeicaoTitulo.textContent = refeicao;
+
+            const refeicaoInputs = document.createElement('div');
+            refeicaoInputs.className = 'refeicao-inputs';
+
+            const descricaoSpan = document.createElement('span');
+            descricaoSpan.className = 'refeicao-descricao';
+            descricaoSpan.textContent = (planoDoDia[refeicao] && planoDoDia[refeicao].descricao)
+                ? planoDoDia[refeicao].descricao
+                : 'Não planejado';
+
+            const caloriasSpan = document.createElement('span');
+            caloriasSpan.className = 'refeicao-calorias';
+            const caloriasPlanejadas = (planoDoDia[refeicao] && planoDoDia[refeicao].calorias)
+                ? parseInt(planoDoDia[refeicao].calorias)
+                : 0;
+            caloriasSpan.textContent = `${caloriasPlanejadas} kcal`;
+            totalCaloriasDiaAtual += caloriasPlanejadas;
+
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.className = 'refeicao-checkbox';
+            checkbox.dataset.refeicao = refeicao;
+            checkbox.dataset.data = dataHoje;
+
+            if (dieta.registroDiario[dataHoje] && dieta.registroDiario[dataHoje][refeicao] && dieta.registroDiario[dataHoje][refeicao].concluido) {
+                checkbox.checked = true;
+            }
+
+            checkbox.addEventListener('change', (event) => {
+                const isChecked = event.target.checked;
+                const ref = event.target.dataset.refeicao;
+                const data = event.target.dataset.data;
+
+                if (!dieta.registroDiario[data]) {
+                    dieta.registroDiario[data] = {};
+                }
+                if (!dieta.registroDiario[data][ref]) {
+                    dieta.registroDiario[data][ref] = {};
+                }
+                dieta.registroDiario[data][ref].concluido = isChecked;
+
+                salvarDieta();
+                mostrarStatusSalvamento(`Refeição "${ref}" marcada como ${isChecked ? 'feita' : 'não feita'}!`);
+            });
+
+            refeicaoInputs.appendChild(descricaoSpan);
+            refeicaoInputs.appendChild(caloriasSpan);
+            refeicaoInputs.appendChild(checkbox);
+
+            refeicaoDiv.appendChild(refeicaoTitulo);
+            refeicaoDiv.appendChild(refeicaoInputs);
+
+            registroDiaAtualContainer.appendChild(refeicaoDiv);
+        });
+
+        const diaFooterRegistro = document.createElement('div');
+        diaFooterRegistro.className = 'dia-footer';
+        diaFooterRegistro.style.justifyContent = 'flex-end';
+        diaFooterRegistro.innerHTML = `
+            <div class="calorias-totais">Planejado para hoje: ${totalCaloriasDiaAtual} calorias</div>
+        `;
+        registroDiaAtualContainer.appendChild(diaFooterRegistro);
+    }
+
+    // Função para marcar o dia atual como cumprido ou não cumprido
+    function marcarDiaComo(status) {
+        const hoje = new Date();
+        const dataHoje = hoje.toISOString().split('T')[0];
+
+        if (!dieta.registroDiario[dataHoje]) {
+            dieta.registroDiario[dataHoje] = {};
+        }
+        dieta.registroDiario[dataHoje].status = status;
+        dieta.ultimaAtualizacaoDiaria = new Date().toISOString();
+
+        salvarDieta();
+        mostrarStatusSalvamento(`Dia marcado como: ${status === 'sucesso' ? 'CUMPRIDO ✓' : 'NÃO CUMPRIDO ✗'}!`);
+
+        // Podemos adicionar feedback visual para os botões aqui
+        const botoes = [diaCumpridoBtn, diaNaoCumpridoBtn];
+        botoes.forEach(btn => {
+            btn.classList.remove('btn-success', 'btn-danger'); // Remove classes de cor anteriores
+        });
+
+        if (status === 'sucesso') {
+            diaCumpridoBtn.classList.add('btn-success');
+            diaNaoCumpridoBtn.classList.remove('btn-danger'); // Garante que o outro botão esteja "neutro"
+        } else {
+            diaNaoCumpridoBtn.classList.add('btn-danger');
+            diaCumpridoBtn.classList.remove('btn-success'); // Garante que o outro botão esteja "neutro"
+        }
+    }
+
+
+    // Atualizar totais de calorias para cada dia e sumário (agora lendo do planejamento)
+    function atualizarTotais() {
+        let totalSemana = 0;
+        let diasComDados = 0;
+        let maiorCalorias = 0;
+        let maiorCaloriasDia = '';
+        let menorCalorias = Infinity;
+        let menorCaloriasDia = '';
+
+        diasDaSemana.forEach(dia => {
+            let totalDia = 0;
+
+            if (dieta.planejamento[dia]) {
+                Object.keys(dieta.planejamento[dia]).forEach(refeicao => {
+                    const calorias = parseInt(dieta.planejamento[dia][refeicao].calorias) || 0;
+                    totalDia += calorias;
+                });
+            }
+
+            const totalPlanejamentoElement = document.getElementById(`calorias-totais-planejamento-${dia.toLowerCase()}`);
+            if (totalPlanejamentoElement) {
+                totalPlanejamentoElement.textContent = `Total: ${totalDia} calorias`;
+            }
+
+            if (totalDia > 0) {
+                totalSemana += totalDia;
+                diasComDados++;
+
+                if (totalDia > maiorCalorias) {
+                    maiorCalorias = totalDia;
+                    maiorCaloriasDia = dia;
+                }
+
+                if (totalDia < menorCalorias) {
+                    menorCalorias = totalDia;
+                    menorCaloriasDia = dia;
+                }
+            }
+        });
+
+        const media = diasComDados > 0 ? Math.round(totalSemana / diasComDados) : 0;
+        mediaDiaria.textContent = media;
+
+        if (maiorCaloriasDia) {
+            maiorDia.textContent = maiorCaloriasDia.substring(0, 3);
+            maiorDiaValor.textContent = `${maiorCalorias} calorias`;
+        } else {
+            maiorDia.textContent = '-';
+            maiorDiaValor.textContent = '0 calorias';
+        }
+
+        if (menorCaloriasDia && menorCalorias !== Infinity) {
+            menorDia.textContent = menorCaloriasDia.substring(0, 3);
+            menorDiaValor.textContent = `${menorCalorias} calorias`;
+        } else {
+            menorDia.textContent = '-';
+            menorDiaValor.textContent = '0 calorias';
+        }
+
+        if (!dieta.meta) {
+            statusMeta.textContent = '-';
+            statusMetaDescricao.textContent = 'Defina uma meta';
+            statusMeta.style.color = '';
+        } else {
+            if (media === 0) {
+                statusMeta.textContent = '-';
+                statusMetaDescricao.textContent = 'Adicione refeições';
+                statusMeta.style.color = '';
+            } else if (media <= dieta.meta) {
+                statusMeta.textContent = '✓';
+                statusMeta.style.color = 'var(--success-color)';
+                statusMetaDescricao.textContent = `${dieta.meta - media} calorias abaixo`;
+            } else {
+                statusMeta.textContent = '!';
+                statusMeta.style.color = 'var(--danger-color)';
+                statusMetaDescricao.textContent = `${media - dieta.meta} calorias acima`;
+            }
+        }
+    }
+
+    // Definir a meta de calorias
+    function definirMeta() {
+        const meta = parseInt(metaCaloriasInput.value) || 0;
+        dieta.meta = meta;
+
+        salvarDieta();
+        atualizarTotais();
+
+        mostrarStatusSalvamento('Meta definida com sucesso!');
+    }
+
+    // Salvar dieta no localStorage
+    function salvarDieta() {
+        localStorage.setItem('dieta', JSON.stringify(dieta));
+    }
+
+    // Carregar dieta do localStorage
+    function carregarDieta() {
+        const dietaSalva = localStorage.getItem('dieta');
+        if (dietaSalva) {
+            dieta = JSON.parse(dietaSalva);
+            metaCaloriasInput.value = dieta.meta || '';
+            // Garante que as novas propriedades existem, mesmo que o localStorage estivesse vazio ou antigo
+            dieta.planejamento = dieta.planejamento || {};
+            dieta.registroDiario = dieta.registroDiario || {};
+            dieta.ultimaAtualizacaoDiaria = dieta.ultimaAtualizacaoDiaria || '';
+        }
+        // Se a dieta for carregada, e o dia atual já tiver status, atualiza os botões
+        const hoje = new Date().toISOString().split('T')[0];
+        if (dieta.registroDiario[hoje] && dieta.registroDiario[hoje].status) {
+            const statusAtual = dieta.registroDiario[hoje].status;
+            if (statusAtual === 'sucesso') {
+                diaCumpridoBtn.classList.add('btn-success');
+                diaNaoCumpridoBtn.classList.remove('btn-danger');
+            } else if (statusAtual === 'falha') {
+                diaNaoCumpridoBtn.classList.add('btn-danger');
+                diaCumpridoBtn.classList.remove('btn-success');
+            }
+        } else {
+            // Se não houver status, garantir que nenhum botão esteja colorido
+            diaCumpridoBtn.classList.remove('btn-success');
+            diaNaoCumpridoBtn.classList.remove('btn-danger');
+        }
+    }
+
+    // Mostrar status de salvamento
+    function mostrarStatusSalvamento(mensagem = 'Dados salvos!') {
+        statusSalvamento.textContent = mensagem;
+        statusSalvamento.classList.add('visivel');
+
+        setTimeout(() => {
+            statusSalvamento.classList.remove('visivel');
+        }, 2000);
+    }
+
+    // Event listeners
+    definirMetaBtn.addEventListener('click', definirMeta);
+
+    mostrarPlanejamentoBtn.addEventListener('click', () => {
+        // Alterna a visibilidade do planejamento
+        if (planejamentoSemanaContainer.style.display === 'none') {
+            planejamentoSemanaContainer.style.display = 'grid';
+            mostrarPlanejamentoBtn.textContent = 'Esconder Planejamento da Semana';
+        } else {
+            planejamentoSemanaContainer.style.display = 'none';
+            mostrarPlanejamentoBtn.textContent = 'Mostrar Planejamento da Semana';
+        }
+    });
+
+    diaCumpridoBtn.addEventListener('click', () => marcarDiaComo('sucesso'));
+    diaNaoCumpridoBtn.addEventListener('click', () => marcarDiaComo('falha'));
+
+    // Inicialização principal ao carregar a janela
+    window.addEventListener('load', () => {
+        carregarDieta(); // Primeiro carrega os dados
+        inicializarPlanejamentoSemanal(); // Depois gera os inputs para planejamento
+        inicializarRegistroDiario(); // Gera o card do dia atual
+        atualizarTotais(); // E por fim, atualiza o sumário e os totais do planejamento
+    });
+</script>
 </body>
 </html>

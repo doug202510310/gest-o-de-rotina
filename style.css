@@ -12,6 +12,16 @@
     --preto: #000000;
     --cor-de-fundo: rgb(76, 73, 73);
     --azul-claro: #66b3ff;
+    /* Novas variáveis para a dieta (copiadas de dieta.html) */
+    --primary-color: rgb(24, 179, 173); /* Verde-água para elementos primários */
+    --secondary-color:#f1f1f1; /* Cinza claro para fundos secundários */
+    --text-color: #333; /* Cor de texto padrão */
+    --border-color: #ddd; /* Cor de borda padrão */
+    --success-color: #4caf50; /* Verde para sucesso */
+    --warning-color: #ff9800; /* Laranja para aviso */
+    --danger-color: #f44336; /* Vermelho para perigo */
+    --button-success-color: #2ecc71; /* Um verde ligeiramente diferente para botões de sucesso, pode ser o mesmo do success-color */
+    --button-danger-color: #e74c3c; /* Um vermelho ligeiramente diferente para botões de perigo, pode ser o mesmo do danger-color */
 }
 header{
     background-color: var(--preto);
