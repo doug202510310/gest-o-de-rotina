@@ -510,7 +510,6 @@
     
     <div class="container">
         <div class="attributes-container">
-            <!-- Disciplina -->
             <div class="attribute-card">
                 <div class="attribute-header">
                     <h2 class="attribute-title">Disciplina</h2>
@@ -524,11 +523,9 @@
                     <div class="attribute-progress-bar disciplina-color" id="disciplina-progress"></div>
                 </div>
                 <div class="history-list" id="disciplina-history">
-                    <!-- Histórico será preenchido pelo JavaScript -->
-                </div>
+                    </div>
             </div>
             
-            <!-- Idioma -->
             <div class="attribute-card">
                 <div class="attribute-header">
                     <h2 class="attribute-title">Idioma</h2>
@@ -541,11 +538,9 @@
                     <div class="attribute-progress-bar idioma-color" id="idioma-progress"></div>
                 </div>
                 <div class="history-list" id="idioma-history">
-                    <!-- Histórico será preenchido pelo JavaScript -->
-                </div>
+                    </div>
             </div>
             
-            <!-- Dedicação -->
             <div class="attribute-card">
                 <div class="attribute-header">
                     <h2 class="attribute-title">Dedicação</h2>
@@ -558,22 +553,10 @@
                 <div class="attribute-progress">
                     <div class="attribute-progress-bar dedicacao-color" id="dedicacao-progress"></div>
                 </div>
-                <div class="attribute-actions">
-                    <div class="counter-container">
-                        <select id="dedicacao-status" style="padding: 8px; border: 1px solid #ddd; border-radius: 5px; margin-right: 10px;">
-                            <option value="sucesso">Dia cumprido ✓</option>
-                            <option value="falha">Dia não cumprido ✗</option>
-                        </select>
-                        <input type="date" id="dedicacao-data" style="padding: 8px; border: 1px solid #ddd; border-radius: 5px; margin-right: 10px;">
-                    </div>
-                    <button class="action-button dedicacao-color" id="dedicacao-submit">Registrar</button>
-                </div>
                 <div class="history-list" id="dedicacao-history">
-                    <!-- Histórico será preenchido pelo JavaScript -->
-                </div>
+                    </div>
             </div>
             
-            <!-- Riqueza -->
             <div class="attribute-card">
                 <div class="attribute-header">
                     <h2 class="attribute-title">Riqueza</h2>
@@ -592,11 +575,9 @@
                     <button class="action-button riqueza-color" id="riqueza-submit">Registrar</button>
                 </div>
                 <div class="history-list" id="riqueza-history">
-                    <!-- Histórico será preenchido pelo JavaScript -->
-                </div>
+                    </div>
             </div>
             
-            <!-- Força -->
             <div class="attribute-card">
                 <div class="attribute-header">
                     <h2 class="attribute-title">Força</h2>
@@ -617,11 +598,9 @@
                     <button class="action-button forca-color" id="forca-submit">Registrar</button>
                 </div>
                 <div class="history-list" id="forca-history">
-                    <!-- Histórico será preenchido pelo JavaScript -->
-                </div>
+                    </div>
             </div>
             
-            <!-- Inteligência -->
             <div class="attribute-card">
                 <div class="attribute-header">
                     <h2 class="attribute-title">Inteligência</h2>
@@ -638,8 +617,7 @@
                     <button class="action-button inteligencia-color" id="curso-submit">Concluir Curso</button>
                 </div>
                 <div class="history-list" id="inteligencia-history">
-                    <!-- Histórico será preenchido pelo JavaScript -->
-                </div>
+                    </div>
             </div>
         </div>
         
@@ -662,13 +640,10 @@
         </div>
     </div>
     
-    <!-- Status de notificação -->
     <div id="status-notification">Progresso salvo!</div>
     
-    <!-- Botão de voltar -->
     <a href="index.html" class="botao-voltar" title="Voltar à página principal">⬅</a>
     
-    <!-- Modal de Preview de Avatares (Carrossel) -->
     <div class="preview-modal" id="avatar-preview-modal">
         <div class="preview-container carousel-container">
             <button class="preview-close" id="preview-close">&times;</button>
@@ -677,14 +652,12 @@
             <div class="carousel">
                 <button class="carousel-btn prev" id="carousel-prev">&#10094;</button>
                 <div class="carousel-content" id="carousel-content">
-                    <!-- Slides serão adicionados aqui -->
-                </div>
+                    </div>
                 <button class="carousel-btn next" id="carousel-next">&#10095;</button>
             </div>
             
             <div class="carousel-dots" id="carousel-dots">
-                <!-- Pontos de navegação serão adicionados aqui -->
-            </div>
+                </div>
         </div>
     </div>
     
@@ -768,11 +741,6 @@
         const riquezaValor = document.getElementById('riqueza-valor');
         const riquezaSubmit = document.getElementById('riqueza-submit');
         
-        // Adicionar estes elementos às declarações de variáveis existentes
-        const dedicacaoStatus = document.getElementById('dedicacao-status');
-        const dedicacaoData = document.getElementById('dedicacao-data');
-        const dedicacaoSubmit = document.getElementById('dedicacao-submit');
-        
         // Níveis e pontos necessários
         const niveis = [
             { nivel: 1, nome: "Iniciante", pontos: 0, imagem: "img/avatar-level1.jpg" },
@@ -781,9 +749,6 @@
             { nivel: 4, nome: "Experiente", pontos: 300, imagem: "img/avatar-level4.jpg" },
             { nivel: 5, nome: "Mestre", pontos: 500, imagem: "img/avatar-level5.jpg" }
         ];
-        
-        // Definir data atual como valor padrão para o campo de data
-        dedicacaoData.valueAsDate = new Date();
         
         // Carregar progresso do localStorage
         function carregarProgresso() {
@@ -943,32 +908,66 @@
             }
         }
         
-        // Verificar dieta
-        function verificarDieta() {
-            const dietaSalva = localStorage.getItem('dieta');
-            if (!dietaSalva) return;
-            
-            const dieta = JSON.parse(dietaSalva);
-            const ultimaVerificacao = progressoData.ultimaVerificacao.dieta;
-            
-            // Verificar se há novos dados de dieta
-            if (dieta.ultimaAtualizacao && (!ultimaVerificacao || dieta.ultimaAtualizacao > ultimaVerificacao)) {
-                // Processar atualizações de dieta
-                Object.keys(dieta.dias || {}).forEach(dia => {
-                    const statusDia = dieta.dias[dia].status;
-                    if (statusDia === 'sucesso') {
-                        progressoData.dedicacao.pontos += 1;
-                        adicionarHistorico('dedicacao', `Dieta cumprida: ${dia}`, 1);
-                    } else if (statusDia === 'falha') {
-                        progressoData.dedicacao.pontos -= 2;
-                        adicionarHistorico('dedicacao', `Dieta não cumprida: ${dia}`, -2);
+    // Verificar dieta
+    function verificarDieta() {
+        const dietaSalva = localStorage.getItem('dieta');
+        if (!dietaSalva) return;
+
+        const dietaDados = JSON.parse(dietaSalva);
+        const ultimaAtualizacaoProgresso = progressoData.ultimaVerificacao.dieta;
+        const ultimaAtualizacaoDieta = dietaDados.ultimaAtualizacaoDiaria; // Data de atualização na dieta.html
+
+        // Só processa se houve uma atualização na página de dieta desde a última verificação
+        if (ultimaAtualizacaoDieta && (!ultimaAtualizacaoProgresso || new Date(ultimaAtualizacaoDieta) > new Date(ultimaAtualizacaoProgresso))) {
+            let pontosGanhos = 0;
+            let pontosPerdidos = 0;
+            let totalPontosAlterados = 0;
+            const historicoAdicionado = [];
+
+            // Percorre o registroDiario para ver quais dias foram marcados como sucesso/falha desde a última verificação
+            for (const data in dietaDados.registroDiario) {
+                const diaRegistro = dietaDados.registroDiario[data];
+                const dataDietaISO = new Date(data).toISOString().split('T')[0]; // Garante formato consistente
+
+                // Apenas processa se o dia foi marcado e é mais recente que a última verificação
+                if (diaRegistro.status && (!ultimaAtualizacaoProgresso || new Date(dataDietaISO) >= new Date(ultimaAtualizacaoProgresso.split('T')[0]))) {
+                    if (diaRegistro.status === 'sucesso') {
+                        // Verifica se esta entrada já está no histórico para evitar duplicação
+                        const jaRegistrado = progressoData.dedicacao.historico.some(item =>
+                            item.descricao.includes(`Dieta cumprida: ${new Date(data).toLocaleDateString('pt-BR')}`) && item.pontos === 1
+                        );
+                        if (!jaRegistrado) {
+                            pontosGanhos += 1;
+                            historicoAdicionado.push({ descricao: `Dieta cumprida: ${new Date(data).toLocaleDateString('pt-BR')}`, pontos: 1 });
+                        }
+                    } else if (diaRegistro.status === 'falha') {
+                        // Verifica se esta entrada já está no histórico
+                        const jaRegistrado = progressoData.dedicacao.historico.some(item =>
+                            item.descricao.includes(`Dieta não cumprida: ${new Date(data).toLocaleDateString('pt-BR')}`) && item.pontos === -2
+                        );
+                        if (!jaRegistrado) {
+                            pontosPerdidos += 2; // Pontos perdidos são sempre positivos aqui para a soma total
+                            historicoAdicionado.push({ descricao: `Dieta não cumprida: ${new Date(data).toLocaleDateString('pt-BR')}`, pontos: -2 });
+                        }
                     }
-                });
-                
-                // Atualizar data de verificação
-                progressoData.ultimaVerificacao.dieta = dieta.ultimaAtualizacao;
+                }
+            }
+
+            totalPontosAlterados = pontosGanhos - pontosPerdidos;
+
+            if (totalPontosAlterados !== 0 || historicoAdicionado.length > 0) {
+                progressoData.dedicacao.pontos += totalPontosAlterados;
+                historicoAdicionado.forEach(item => adicionarHistorico('dedicacao', item.descricao, item.pontos));
+            }
+
+            // Atualizar data de verificação APENAS se houve algo para processar
+            // Ou se a última atualização da dieta for mais recente
+            if (ultimaAtualizacaoDieta && (new Date(ultimaAtualizacaoDieta) > new Date(ultimaAtualizacaoProgresso || '1970-01-01T00:00:00.000Z'))) {
+                 progressoData.ultimaVerificacao.dieta = ultimaAtualizacaoDieta;
+                 salvarProgresso(); // Salva as alterações aqui
             }
         }
+    }
         
         // Verificar finanças
         function verificarFinancas() {
@@ -1066,45 +1065,6 @@
             }
             
             riquezaValor.value = '';
-            atualizarInterface();
-            salvarProgresso();
-        }
-        
-        // Função para registrar dia de dedicação
-        function registrarDedicacao() {
-            const status = dedicacaoStatus.value;
-            const data = dedicacaoData.value;
-            
-            if (!data) {
-                mostrarNotificacao('Por favor, selecione uma data');
-                return;
-            }
-            
-            const dataFormatada = new Date(data).toLocaleDateString('pt-BR');
-            let pontos = 0;
-            let mensagem = '';
-            
-            if (status === 'sucesso') {
-                pontos = 1;
-                mensagem = `Dieta cumprida: ${dataFormatada}`;
-            } else {
-                pontos = -2;
-                mensagem = `Dieta não cumprida: ${dataFormatada}`;
-            }
-            
-            progressoData.dedicacao.pontos += pontos;
-            adicionarHistorico('dedicacao', mensagem, pontos);
-            
-            // Mostrar mensagem de acordo com o resultado
-            if (pontos > 0) {
-                mostrarNotificacao(`+${pontos} ponto de Dedicação adicionado!`);
-            } else {
-                mostrarNotificacao(`${pontos} pontos de Dedicação removidos`);
-            }
-            
-            // Resetar campos
-            dedicacaoData.valueAsDate = new Date();
-            
             atualizarInterface();
             salvarProgresso();
         }
