@@ -1,0 +1,1386 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Progresso</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #f1f1f1;
+            --text-color: #333;
+            --border-color: #ddd;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --purple-color: #9b59b6;
+            --disciplina-color: #3498db;
+            --idioma-color: #9b59b6;
+            --dedicacao-color: #2ecc71;
+            --riqueza-color: #f1c40f;
+            --forca-color: #e74c3c;
+            --inteligencia-color: #1abc9c;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: black;
+            color: var(--text-color);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 3fr 2fr;
+            gap: 30px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: whitesmoke;
+            margin-bottom: 30px;
+            font-size: 32px;
+        }
+        
+        .avatar-container {
+            background-color:rgb(56, 56, 56);
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            text-align: center;
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+        }
+        
+        .avatar-title {
+            font-size: 24px;
+            color: whitesmoke;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+        
+        .avatar-image {
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        .avatar-level {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: whitesmoke;
+        }
+        
+        .avatar-evolution {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            
+        }
+        
+        .evolution-stage {
+            background-color: whitesmoke;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        
+        .evolution-stage.active {
+            background-color: whitesmoke;
+            transform: scale(1.2);
+        }
+        
+        .total-points {
+            font-size: 18px;
+            margin: 15px 0;
+            color: whitesmoke;
+        }
+        
+        .progress-bar-container {
+            width: 100%;
+            height: 12px;
+            background-color: #ecf0f1;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            border-radius: 6px;
+            transition: width 0.5s ease-in-out;
+        }
+        
+        .attributes-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .attribute-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        
+        .attribute-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .attribute-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 0;
+        }
+        
+        .attribute-points {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .attribute-description {
+            color:#666;
+            margin-bottom: 20px;
+        }
+        
+        .attribute-progress {
+            height: 10px;
+            background-color: #ecf0f1;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+        
+        .attribute-progress-bar {
+            height: 100%;
+            border-radius: 5px;
+            transition: width 0.3s;
+        }
+        
+        .disciplina-color {
+            background-color: var(--disciplina-color);
+        }
+        
+        .idioma-color {
+            background-color: var(--idioma-color);
+        }
+        
+        .dedicacao-color {
+            background-color: var(--dedicacao-color);
+        }
+        
+        .riqueza-color {
+            background-color: var(--riqueza-color);
+        }
+        
+        .forca-color {
+            background-color: var(--forca-color);
+        }
+        
+        .inteligencia-color {
+            background-color: var(--inteligencia-color);
+        }
+        
+        .attribute-actions {
+            margin-top: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .counter-container {
+            display: flex;
+            align-items: center;
+            background-color: #f5f5f5;
+            border-radius: 5px;
+            overflow: hidden;
+            border: 1px solid #ddd;
+        }
+        
+        .counter-button {
+            background-color: #eee;
+            border: none;
+            color: #333;
+            font-size: 18px;
+            width: 40px;
+            height: 36px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        
+        .counter-button:hover {
+            background-color: #ddd;
+        }
+        
+        .counter-value {
+            padding: 0 15px;
+            font-weight: bold;
+        }
+        
+        .action-button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: var(--primary-color);
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+        
+        .action-button:hover {
+            opacity: 0.9;
+        }
+        
+        .history-list {
+            margin-top: 15px;
+            max-height: 120px;
+            overflow-y: auto;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            padding: 10px;
+            background-color: #f9f9f9;
+        }
+        
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+        
+        .history-item:last-child {
+            border-bottom: none;
+        }
+        
+        /* Status de notificação */
+        #status-notification {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            padding: 10px 15px;
+            border-radius: 4px;
+            background-color: rgba(0,0,0,0.7);
+            color: white;
+            font-size: 14px;
+            opacity: 0;
+            transition: opacity 0.5s;
+            z-index: 90;
+        }
+        
+        #status-notification.visible {
+            opacity: 1;
+        }
+        
+        /* Botão flutuante de voltar */
+        .botao-voltar {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+            z-index: 90;
+            font-size: 24px;
+        }
+        
+        .botao-voltar:hover {
+            background-color: #2980b9;
+            transform: scale(1.1);
+        }
+        
+        /* Estilos para o Modal de Preview de Avatares */
+        .preview-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .preview-container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            max-width: 90%;
+            max-height: 90%;
+            overflow: auto;
+            position: relative;
+        }
+        
+        .preview-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #333;
+        }
+        
+        .preview-title {
+            text-align: center;
+            color: var(--primary-color);
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+        
+        .preview-button {
+            margin-top: 10px;
+            padding: 8px 16px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            display: block;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+        
+        .preview-button:hover {
+            background-color: #2980b9;
+        }
+        
+        /* Estilos do carrossel */
+        .carousel-container {
+            display: flex;
+            flex-direction: column;
+            padding: 30px;
+        }
+        
+        .carousel {
+            position: relative;
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+            height: 400px;
+        }
+        
+        .carousel-content {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .carousel-slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.5s ease;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        
+        .carousel-avatar {
+            max-width: 80%;
+            max-height: 250px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            object-fit: contain;
+        }
+        
+        .carousel-info {
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .carousel-level {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+        
+        .carousel-points {
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .carousel-status {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        
+        .carousel-status.locked {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .carousel-status.unlocked {
+            background-color: #2ecc71;
+            color: white;
+        }
+        
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0,0,0,0.5);
+            color: white;
+            border: none;
+            font-size: 24px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 10;
+            transition: background-color 0.3s;
+        }
+        
+        .carousel-btn:hover {
+            background-color: rgba(0,0,0,0.8);
+        }
+        
+        .carousel-btn.prev {
+            left: -20px;
+        }
+        
+        .carousel-btn.next {
+            right: -20px;
+        }
+        
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .carousel-dot {
+            width: 12px;
+            height: 12px;
+            background-color: #ddd;
+            border-radius: 50%;
+            margin: 0 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .carousel-dot.active {
+            background-color: var(--primary-color);
+            transform: scale(1.2);
+        }
+    </style>
+</head>
+<body>
+    <h1>Meu Progresso</h1>
+    
+    <div class="container">
+        <div class="attributes-container">
+            <!-- Disciplina -->
+            <div class="attribute-card">
+                <div class="attribute-header">
+                    <h2 class="attribute-title">Disciplina</h2>
+                    <div class="attribute-points" id="disciplina-points">0</div>
+                </div>
+                <div class="attribute-description">
+                    Pontos ganhos ao completar atividades do seu calendário.
+                    <br>Alta prioridade: 2 pontos | Média: 1 ponto | Baixa: 0,5 ponto
+                </div>
+                <div class="attribute-progress">
+                    <div class="attribute-progress-bar disciplina-color" id="disciplina-progress"></div>
+                </div>
+                <div class="history-list" id="disciplina-history">
+                    <!-- Histórico será preenchido pelo JavaScript -->
+                </div>
+            </div>
+            
+            <!-- Idioma -->
+            <div class="attribute-card">
+                <div class="attribute-header">
+                    <h2 class="attribute-title">Idioma</h2>
+                    <div class="attribute-points" id="idioma-points">0</div>
+                </div>
+                <div class="attribute-description">
+                    1 ponto para cada 10 palavras adicionadas ao seu vocabulário de inglês.
+                </div>
+                <div class="attribute-progress">
+                    <div class="attribute-progress-bar idioma-color" id="idioma-progress"></div>
+                </div>
+                <div class="history-list" id="idioma-history">
+                    <!-- Histórico será preenchido pelo JavaScript -->
+                </div>
+            </div>
+            
+            <!-- Dedicação -->
+            <div class="attribute-card">
+                <div class="attribute-header">
+                    <h2 class="attribute-title">Dedicação</h2>
+                    <div class="attribute-points" id="dedicacao-points">0</div>
+                </div>
+                <div class="attribute-description">
+                    +1 ponto para cada dia da dieta cumprido corretamente.
+                    <br>-2 pontos para cada dia não cumprido corretamente.
+                </div>
+                <div class="attribute-progress">
+                    <div class="attribute-progress-bar dedicacao-color" id="dedicacao-progress"></div>
+                </div>
+                <div class="attribute-actions">
+                    <div class="counter-container">
+                        <select id="dedicacao-status" style="padding: 8px; border: 1px solid #ddd; border-radius: 5px; margin-right: 10px;">
+                            <option value="sucesso">Dia cumprido ✓</option>
+                            <option value="falha">Dia não cumprido ✗</option>
+                        </select>
+                        <input type="date" id="dedicacao-data" style="padding: 8px; border: 1px solid #ddd; border-radius: 5px; margin-right: 10px;">
+                    </div>
+                    <button class="action-button dedicacao-color" id="dedicacao-submit">Registrar</button>
+                </div>
+                <div class="history-list" id="dedicacao-history">
+                    <!-- Histórico será preenchido pelo JavaScript -->
+                </div>
+            </div>
+            
+            <!-- Riqueza -->
+            <div class="attribute-card">
+                <div class="attribute-header">
+                    <h2 class="attribute-title">Riqueza</h2>
+                    <div class="attribute-points" id="riqueza-points">0</div>
+                </div>
+                <div class="attribute-description">
+                    10 pontos para cada R$100 conquistados adicionalmente.
+                </div>
+                <div class="attribute-progress">
+                    <div class="attribute-progress-bar riqueza-color" id="riqueza-progress"></div>
+                </div>
+                <div class="attribute-actions">
+                    <div class="counter-container">
+                        <input type="number" id="riqueza-valor" placeholder="Valor em R$" style="width: 100px; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+                    </div>
+                    <button class="action-button riqueza-color" id="riqueza-submit">Registrar</button>
+                </div>
+                <div class="history-list" id="riqueza-history">
+                    <!-- Histórico será preenchido pelo JavaScript -->
+                </div>
+            </div>
+            
+            <!-- Força -->
+            <div class="attribute-card">
+                <div class="attribute-header">
+                    <h2 class="attribute-title">Força</h2>
+                    <div class="attribute-points" id="forca-points">0</div>
+                </div>
+                <div class="attribute-description">
+                    3 pontos para cada 5 idas à academia. Registre suas idas abaixo:
+                </div>
+                <div class="attribute-progress">
+                    <div class="attribute-progress-bar forca-color" id="forca-progress"></div>
+                </div>
+                <div class="attribute-actions">
+                    <div class="counter-container">
+                        <button class="counter-button" id="forca-decrease">−</button>
+                        <div class="counter-value" id="forca-counter">0</div>
+                        <button class="counter-button" id="forca-increase">+</button>
+                    </div>
+                    <button class="action-button forca-color" id="forca-submit">Registrar</button>
+                </div>
+                <div class="history-list" id="forca-history">
+                    <!-- Histórico será preenchido pelo JavaScript -->
+                </div>
+            </div>
+            
+            <!-- Inteligência -->
+            <div class="attribute-card">
+                <div class="attribute-header">
+                    <h2 class="attribute-title">Inteligência</h2>
+                    <div class="attribute-points" id="inteligencia-points">0</div>
+                </div>
+                <div class="attribute-description">
+                    2 pontos para cada curso concluído. Registre seus cursos abaixo:
+                </div>
+                <div class="attribute-progress">
+                    <div class="attribute-progress-bar inteligencia-color" id="inteligencia-progress"></div>
+                </div>
+                <div class="attribute-actions">
+                    <input type="text" id="curso-nome" placeholder="Nome do curso" style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 5px; margin-right: 10px;">
+                    <button class="action-button inteligencia-color" id="curso-submit">Concluir Curso</button>
+                </div>
+                <div class="history-list" id="inteligencia-history">
+                    <!-- Histórico será preenchido pelo JavaScript -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="avatar-container">
+            <h2 class="avatar-title">Seu Avatar</h2>
+            <img src="img/avatar-level1.jpg" alt="Avatar" class="avatar-image" id="avatar-image">
+            <div class="avatar-level" id="avatar-level">Nível 1: Iniciante</div>
+            <div class="total-points" id="total-points">Pontos totais: 0</div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="level-progress" style="width: 0%; background-color: var(--primary-color);"></div>
+            </div>
+            <div class="avatar-evolution">
+                <div class="evolution-stage active" title="Nível 1: Iniciante"></div>
+                <div class="evolution-stage" title="Nível 2: Aprendiz"></div>
+                <div class="evolution-stage" title="Nível 3: Intermediário"></div>
+                <div class="evolution-stage" title="Nível 4: Experiente"></div>
+                <div class="evolution-stage" title="Nível 5: Mestre"></div>
+            </div>
+            <button class="preview-button" id="show-avatars">Ver Todos os Avatares</button>
+        </div>
+    </div>
+    
+    <!-- Status de notificação -->
+    <div id="status-notification">Progresso salvo!</div>
+    
+    <!-- Botão de voltar -->
+    <a href="index.html" class="botao-voltar" title="Voltar à página principal">⬅</a>
+    
+    <!-- Modal de Preview de Avatares (Carrossel) -->
+    <div class="preview-modal" id="avatar-preview-modal">
+        <div class="preview-container carousel-container">
+            <button class="preview-close" id="preview-close">&times;</button>
+            <h2 class="preview-title">Evolução do Avatar</h2>
+            
+            <div class="carousel">
+                <button class="carousel-btn prev" id="carousel-prev">&#10094;</button>
+                <div class="carousel-content" id="carousel-content">
+                    <!-- Slides serão adicionados aqui -->
+                </div>
+                <button class="carousel-btn next" id="carousel-next">&#10095;</button>
+            </div>
+            
+            <div class="carousel-dots" id="carousel-dots">
+                <!-- Pontos de navegação serão adicionados aqui -->
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Estrutura de dados
+        let progressoData = {
+            disciplina: {
+                pontos: 0,
+                historico: []
+            },
+            idioma: {
+                pontos: 0,
+                palavrasRegistradas: 0,
+                historico: []
+            },
+            dedicacao: {
+                pontos: 0,
+                historico: []
+            },
+            riqueza: {
+                pontos: 0,
+                valorRegistrado: 0,
+                historico: []
+            },
+            forca: {
+                pontos: 0,
+                visitasRegistradas: 0,
+                historico: []
+            },
+            inteligencia: {
+                pontos: 0,
+                historico: []
+            },
+            ultimaVerificacao: {
+                atividades: null,
+                ingles: null,
+                dieta: null,
+                financeiro: null
+            }
+        };
+        
+        // Elementos do DOM
+        const avatarImage = document.getElementById('avatar-image');
+        const avatarLevel = document.getElementById('avatar-level');
+        const totalPoints = document.getElementById('total-points');
+        const levelProgress = document.getElementById('level-progress');
+        const evolutionStages = document.querySelectorAll('.evolution-stage');
+        const statusNotification = document.getElementById('status-notification');
+        
+        // Elementos de pontuação
+        const disciplinaPoints = document.getElementById('disciplina-points');
+        const idiomaPoints = document.getElementById('idioma-points');
+        const dedicacaoPoints = document.getElementById('dedicacao-points');
+        const riquezaPoints = document.getElementById('riqueza-points');
+        const forcaPoints = document.getElementById('forca-points');
+        const inteligenciaPoints = document.getElementById('inteligencia-points');
+        
+        // Elementos de progresso
+        const disciplinaProgress = document.getElementById('disciplina-progress');
+        const idiomaProgress = document.getElementById('idioma-progress');
+        const dedicacaoProgress = document.getElementById('dedicacao-progress');
+        const riquezaProgress = document.getElementById('riqueza-progress');
+        const forcaProgress = document.getElementById('forca-progress');
+        const inteligenciaProgress = document.getElementById('inteligencia-progress');
+        
+        // Elementos de histórico
+        const disciplinaHistory = document.getElementById('disciplina-history');
+        const idiomaHistory = document.getElementById('idioma-history');
+        const dedicacaoHistory = document.getElementById('dedicacao-history');
+        const riquezaHistory = document.getElementById('riqueza-history');
+        const forcaHistory = document.getElementById('forca-history');
+        const inteligenciaHistory = document.getElementById('inteligencia-history');
+        
+        // Elementos de ação
+        const forcaCounter = document.getElementById('forca-counter');
+        const forcaIncrease = document.getElementById('forca-increase');
+        const forcaDecrease = document.getElementById('forca-decrease');
+        const forcaSubmit = document.getElementById('forca-submit');
+        const cursoNome = document.getElementById('curso-nome');
+        const cursoSubmit = document.getElementById('curso-submit');
+        const riquezaValor = document.getElementById('riqueza-valor');
+        const riquezaSubmit = document.getElementById('riqueza-submit');
+        
+        // Adicionar estes elementos às declarações de variáveis existentes
+        const dedicacaoStatus = document.getElementById('dedicacao-status');
+        const dedicacaoData = document.getElementById('dedicacao-data');
+        const dedicacaoSubmit = document.getElementById('dedicacao-submit');
+        
+        // Níveis e pontos necessários
+        const niveis = [
+            { nivel: 1, nome: "Iniciante", pontos: 0, imagem: "img/avatar-level1.jpg" },
+            { nivel: 2, nome: "Aprendiz", pontos: 50, imagem: "img/avatar-level2.jpg" },
+            { nivel: 3, nome: "Intermediário", pontos: 150, imagem: "img/avatar-level3.jpg" },
+            { nivel: 4, nome: "Experiente", pontos: 300, imagem: "img/avatar-level4.jpg" },
+            { nivel: 5, nome: "Mestre", pontos: 500, imagem: "img/avatar-level5.jpg" }
+        ];
+        
+        // Definir data atual como valor padrão para o campo de data
+        dedicacaoData.valueAsDate = new Date();
+        
+        // Carregar progresso do localStorage
+        function carregarProgresso() {
+            const progressoSalvo = localStorage.getItem('progresso');
+            if (progressoSalvo) {
+                progressoData = JSON.parse(progressoSalvo);
+            }
+            
+            // Verificar alterações nas outras páginas
+            verificarAtividades();
+            verificarPalavrasIngles();
+            verificarDieta();
+            verificarFinancas();
+            
+            // Atualizar interface
+            atualizarInterface();
+        }
+        
+        // Salvar progresso no localStorage
+        function salvarProgresso() {
+            localStorage.setItem('progresso', JSON.stringify(progressoData));
+            mostrarNotificacao('Progresso salvo!');
+        }
+        
+        // Mostrar notificação
+        function mostrarNotificacao(mensagem) {
+            statusNotification.textContent = mensagem;
+            statusNotification.classList.add('visible');
+            
+            setTimeout(() => {
+                statusNotification.classList.remove('visible');
+            }, 2000);
+        }
+        
+        // Formatar data
+        function formatarData(data) {
+            const options = { 
+                day: '2-digit', 
+                month: '2-digit',
+                hour: '2-digit', 
+                minute: '2-digit'
+            };
+            return new Date(data).toLocaleDateString('pt-BR', options);
+        }
+        
+        // Adicionar ao histórico
+        function adicionarHistorico(tipo, descricao, pontos) {
+            const agora = new Date();
+            const entrada = {
+                data: agora.toISOString(),
+                descricao: descricao,
+                pontos: pontos
+            };
+            
+            progressoData[tipo].historico.unshift(entrada); // Adicionar no início
+            
+            // Limitar histórico a 20 itens
+            if (progressoData[tipo].historico.length > 20) {
+                progressoData[tipo].historico.pop(); // Remover o mais antigo
+            }
+            
+            atualizarHistorico(tipo);
+        }
+        
+        // Atualizar histórico na interface
+        function atualizarHistorico(tipo) {
+            const historico = progressoData[tipo].historico;
+            const container = document.getElementById(`${tipo}-history`);
+            container.innerHTML = '';
+            
+            if (historico.length === 0) {
+                container.innerHTML = '<div class="history-item"><em>Nenhuma atividade registrada</em></div>';
+                return;
+            }
+            
+            historico.forEach(item => {
+                const entradaHTML = document.createElement('div');
+                entradaHTML.className = 'history-item';
+                
+                const descricao = document.createElement('div');
+                descricao.textContent = item.descricao;
+                
+                const pontoData = document.createElement('div');
+                pontoData.innerHTML = `<strong>${item.pontos > 0 ? '+' : ''}${item.pontos}</strong> <small>${formatarData(item.data)}</small>`;
+                
+                entradaHTML.appendChild(descricao);
+                entradaHTML.appendChild(pontoData);
+                container.appendChild(entradaHTML);
+            });
+        }
+        
+        // Verificar atividades concluídas
+        function verificarAtividades() {
+            const atividadesSalvas = localStorage.getItem('atividadesConcluidas');
+            if (!atividadesSalvas) return;
+            
+            const atividades = JSON.parse(atividadesSalvas);
+            const ultimaVerificacao = progressoData.ultimaVerificacao.atividades;
+            
+            if (!ultimaVerificacao || atividades.ultimaAtualizacao > ultimaVerificacao) {
+                // Processar apenas novas atividades
+                const novasAtividades = atividades.items.filter(a => {
+                    return !ultimaVerificacao || new Date(a.dataCompleta) > new Date(ultimaVerificacao);
+                });
+                
+                novasAtividades.forEach(atividade => {
+                    let pontos = 0;
+                    
+                    // Usar tanto tipo quanto prioridade para compatibilidade
+                    const prioridade = atividade.tipo || atividade.prioridade;
+                    
+                    switch (prioridade) {
+                        case 'alta':
+                            pontos = 2; 
+                            break;
+                        case 'media':
+                            pontos = 1; // Corrigido para 1 ponto
+                            break;
+                        case 'baixa':
+                            pontos = 0.5;
+                            break;
+                        default:
+                            pontos = 0.5; // Para outros tipos, como notícia
+                    }
+                    
+                    progressoData.disciplina.pontos += pontos;
+                    adicionarHistorico('disciplina', `Concluiu: ${atividade.titulo}`, pontos);
+                });
+                
+                // Atualizar data de verificação
+                progressoData.ultimaVerificacao.atividades = atividades.ultimaAtualizacao;
+                
+                // Salvar as alterações
+                salvarProgresso();
+            }
+        }
+        
+        // Verificar palavras de inglês
+        function verificarPalavrasIngles() {
+            const vocabularioSalvo = localStorage.getItem('vocabulary');
+            if (!vocabularioSalvo) return;
+            
+            const vocabulario = JSON.parse(vocabularioSalvo);
+            const totalPalavras = vocabulario.length;
+            const palavrasRegistradas = progressoData.idioma.palavrasRegistradas;
+            
+            if (totalPalavras > palavrasRegistradas) {
+                const novasPalavras = totalPalavras - palavrasRegistradas;
+                const novosPontos = Math.floor(novasPalavras / 10); // Alterado para 10 palavras = 1 ponto
+                
+                if (novosPontos > 0) {
+                    progressoData.idioma.pontos += novosPontos;
+                    adicionarHistorico('idioma', `Adicionou ${novasPalavras} palavras novas`, novosPontos);
+                }
+                
+                progressoData.idioma.palavrasRegistradas = totalPalavras;
+            }
+        }
+        
+        // Verificar dieta
+        function verificarDieta() {
+            const dietaSalva = localStorage.getItem('dieta');
+            if (!dietaSalva) return;
+            
+            const dieta = JSON.parse(dietaSalva);
+            const ultimaVerificacao = progressoData.ultimaVerificacao.dieta;
+            
+            // Verificar se há novos dados de dieta
+            if (dieta.ultimaAtualizacao && (!ultimaVerificacao || dieta.ultimaAtualizacao > ultimaVerificacao)) {
+                // Processar atualizações de dieta
+                Object.keys(dieta.dias || {}).forEach(dia => {
+                    const statusDia = dieta.dias[dia].status;
+                    if (statusDia === 'sucesso') {
+                        progressoData.dedicacao.pontos += 1;
+                        adicionarHistorico('dedicacao', `Dieta cumprida: ${dia}`, 1);
+                    } else if (statusDia === 'falha') {
+                        progressoData.dedicacao.pontos -= 2;
+                        adicionarHistorico('dedicacao', `Dieta não cumprida: ${dia}`, -2);
+                    }
+                });
+                
+                // Atualizar data de verificação
+                progressoData.ultimaVerificacao.dieta = dieta.ultimaAtualizacao;
+            }
+        }
+        
+        // Verificar finanças
+        function verificarFinancas() {
+            // Alterado para usar a chave correta do localStorage
+            const financasSalvas = localStorage.getItem('financeiro-dados');
+            if (!financasSalvas) return;
+            
+            const financas = JSON.parse(financasSalvas);
+            const ultimaVerificacao = progressoData.ultimaVerificacao.financeiro;
+            
+            // Verificar se há novos dados financeiros
+            if (financas.ultimaAtualizacao && (!ultimaVerificacao || financas.ultimaAtualizacao > ultimaVerificacao)) {
+                // Calcular quanto dinheiro foi conquistado desde a última verificação
+                // Alterado para usar a estrutura correta (dinheiroConquistado em vez de conquistasFinanceiras)
+                const dinheiroConquistado = financas.dinheiroConquistado || [];
+                const novoValor = dinheiroConquistado.reduce((sum, item) => sum + Number(item.valor || 0), 0);
+                
+                const valorRegistrado = progressoData.riqueza.valorRegistrado;
+                if (novoValor > valorRegistrado) {
+                    const valorAdicional = novoValor - valorRegistrado;
+                    const pontos = Math.floor(valorAdicional / 100) * 10; // 10 pontos por R$100
+                    
+                    if (pontos > 0) {
+                        progressoData.riqueza.pontos += pontos;
+                        adicionarHistorico('riqueza', `Conquistou R$${valorAdicional.toFixed(2)}`, pontos);
+                        progressoData.riqueza.valorRegistrado = novoValor;
+                    }
+                }
+                
+                // Atualizar data de verificação
+                progressoData.ultimaVerificacao.financeiro = financas.ultimaAtualizacao;
+                
+                // Salvar as alterações
+                salvarProgresso();
+            }
+        }
+        
+        // Registrar ida à academia
+        function registrarAcademia() {
+            const visitas = parseInt(forcaCounter.textContent) || 0;
+            if (visitas <= 0) return;
+            
+            progressoData.forca.visitasRegistradas += visitas;
+            const grupos = Math.floor(progressoData.forca.visitasRegistradas / 5);
+            const pontosNovos = grupos * 3; // 3 pontos por cada grupo de 5 visitas
+            const pontosAnteriores = progressoData.forca.pontos;
+            
+            if (pontosNovos > pontosAnteriores) {
+                const novosPontos = pontosNovos - pontosAnteriores;
+                progressoData.forca.pontos = pontosNovos;
+                adicionarHistorico('forca', `Registrou ${visitas} idas à academia`, novosPontos);
+            } else {
+                adicionarHistorico('forca', `Registrou ${visitas} idas à academia`, 0);
+            }
+            
+            forcaCounter.textContent = "0";
+            atualizarInterface();
+            salvarProgresso();
+        }
+        
+        // Registrar curso concluído
+        function registrarCurso() {
+            const nomeCurso = cursoNome.value.trim();
+            if (!nomeCurso) {
+                mostrarNotificacao('Digite o nome do curso!');
+                return;
+            }
+            
+            progressoData.inteligencia.pontos += 2;
+            adicionarHistorico('inteligencia', `Concluiu curso: ${nomeCurso}`, 2);
+            
+            cursoNome.value = '';
+            atualizarInterface();
+            salvarProgresso();
+        }
+        
+        // Registrar dinheiro conquistado
+        function registrarRiqueza() {
+            const valor = parseFloat(riquezaValor.value) || 0;
+            if (valor <= 0) {
+                mostrarNotificacao('Digite um valor válido!');
+                return;
+            }
+            
+            const pontos = Math.floor(valor / 100) * 10; // 10 pontos por R$100
+            
+            if (pontos > 0) {
+                progressoData.riqueza.pontos += pontos;
+                progressoData.riqueza.valorRegistrado += valor;
+                adicionarHistorico('riqueza', `Conquistou R$ ${valor.toFixed(2)}`, pontos);
+                mostrarNotificacao(`+${pontos} pontos de Riqueza adicionados!`);
+            } else {
+                adicionarHistorico('riqueza', `Conquistou R$ ${valor.toFixed(2)}`, 0);
+                mostrarNotificacao('Valor registrado, mas insuficiente para ganhar pontos');
+            }
+            
+            riquezaValor.value = '';
+            atualizarInterface();
+            salvarProgresso();
+        }
+        
+        // Função para registrar dia de dedicação
+        function registrarDedicacao() {
+            const status = dedicacaoStatus.value;
+            const data = dedicacaoData.value;
+            
+            if (!data) {
+                mostrarNotificacao('Por favor, selecione uma data');
+                return;
+            }
+            
+            const dataFormatada = new Date(data).toLocaleDateString('pt-BR');
+            let pontos = 0;
+            let mensagem = '';
+            
+            if (status === 'sucesso') {
+                pontos = 1;
+                mensagem = `Dieta cumprida: ${dataFormatada}`;
+            } else {
+                pontos = -2;
+                mensagem = `Dieta não cumprida: ${dataFormatada}`;
+            }
+            
+            progressoData.dedicacao.pontos += pontos;
+            adicionarHistorico('dedicacao', mensagem, pontos);
+            
+            // Mostrar mensagem de acordo com o resultado
+            if (pontos > 0) {
+                mostrarNotificacao(`+${pontos} ponto de Dedicação adicionado!`);
+            } else {
+                mostrarNotificacao(`${pontos} pontos de Dedicação removidos`);
+            }
+            
+            // Resetar campos
+            dedicacaoData.valueAsDate = new Date();
+            
+            atualizarInterface();
+            salvarProgresso();
+        }
+        
+        // Calcular nível atual
+        function calcularNivel() {
+            const pontosTotal = calcularPontosTotais();
+            let nivelAtual = null;
+            let proximoNivel = null;
+            
+            for (let i = niveis.length - 1; i >= 0; i--) {
+                if (pontosTotal >= niveis[i].pontos) {
+                    nivelAtual = niveis[i];
+                    proximoNivel = niveis[i + 1];
+                    break;
+                }
+            }
+            
+            // Atualizar avatar e nível
+            avatarImage.src = nivelAtual.imagem;
+            avatarLevel.textContent = `Nível ${nivelAtual.nivel}: ${nivelAtual.nome}`;
+            
+            // Atualizar barra de progresso
+            if (proximoNivel) {
+                const pontosNecessarios = proximoNivel.pontos - nivelAtual.pontos;
+                const pontosObtidos = pontosTotal - nivelAtual.pontos;
+                const percentual = (pontosObtidos / pontosNecessarios) * 100;
+                levelProgress.style.width = `${percentual}%`;
+            } else {
+                levelProgress.style.width = '100%';
+            }
+            
+            // Atualizar estágios de evolução
+            evolutionStages.forEach((stage, index) => {
+                stage.classList.toggle('active', index < nivelAtual.nivel);
+            });
+        }
+        
+        // Calcular pontos totais
+        function calcularPontosTotais() {
+            return progressoData.disciplina.pontos +
+                   progressoData.idioma.pontos +
+                   progressoData.dedicacao.pontos +
+                   progressoData.riqueza.pontos +
+                   progressoData.forca.pontos +
+                   progressoData.inteligencia.pontos;
+        }
+        
+        // Atualizar interface
+        function atualizarInterface() {
+            // Atualizar pontos
+            disciplinaPoints.textContent = progressoData.disciplina.pontos;
+            idiomaPoints.textContent = progressoData.idioma.pontos;
+            dedicacaoPoints.textContent = progressoData.dedicacao.pontos;
+            riquezaPoints.textContent = progressoData.riqueza.pontos;
+            forcaPoints.textContent = progressoData.forca.pontos;
+            inteligenciaPoints.textContent = progressoData.inteligencia.pontos;
+            
+            // Atualizar barras de progresso (considerando 100 pontos como máximo para visualização)
+            disciplinaProgress.style.width = `${Math.min(progressoData.disciplina.pontos, 100)}%`;
+            idiomaProgress.style.width = `${Math.min(progressoData.idioma.pontos, 100)}%`;
+            dedicacaoProgress.style.width = `${Math.min(progressoData.dedicacao.pontos, 100)}%`;
+            riquezaProgress.style.width = `${Math.min(progressoData.riqueza.pontos, 100)}%`;
+            forcaProgress.style.width = `${Math.min(progressoData.forca.pontos, 100)}%`;
+            inteligenciaProgress.style.width = `${Math.min(progressoData.inteligencia.pontos, 100)}%`;
+            
+            // Atualizar históricos
+            atualizarHistorico('disciplina');
+            atualizarHistorico('idioma');
+            atualizarHistorico('dedicacao');
+            atualizarHistorico('riqueza');
+            atualizarHistorico('forca');
+            atualizarHistorico('inteligencia');
+            
+            // Atualizar pontos totais e nível
+            const pontosTotal = calcularPontosTotais();
+            totalPoints.textContent = `Pontos totais: ${pontosTotal}`;
+            
+            // Calcular e atualizar nível
+            calcularNivel();
+        }
+        
+        // Event listeners para contadores
+        forcaIncrease.addEventListener('click', () => {
+            let valor = parseInt(forcaCounter.textContent) || 0;
+            forcaCounter.textContent = valor + 1;
+        });
+        
+        forcaDecrease.addEventListener('click', () => {
+            let valor = parseInt(forcaCounter.textContent) || 0;
+            forcaCounter.textContent = Math.max(0, valor - 1);
+        });
+        
+        forcaSubmit.addEventListener('click', registrarAcademia);
+        cursoSubmit.addEventListener('click', registrarCurso);
+        riquezaSubmit.addEventListener('click', registrarRiqueza);
+        
+        // Elementos do carrossel
+        const previewModal = document.getElementById('avatar-preview-modal');
+        const previewClose = document.getElementById('preview-close');
+        const carouselContent = document.getElementById('carousel-content');
+        const carouselPrev = document.getElementById('carousel-prev');
+        const carouselNext = document.getElementById('carousel-next');
+        const carouselDots = document.getElementById('carousel-dots');
+        const showAvatarsBtn = document.getElementById('show-avatars');
+        
+        // Variáveis do carrossel
+        let currentSlide = 0;
+        
+        // Event listeners para o carrossel
+        showAvatarsBtn.addEventListener('click', () => {
+            carregarCarrossel();
+            previewModal.style.display = 'flex';
+        });
+        
+        previewClose.addEventListener('click', () => {
+            previewModal.style.display = 'none';
+        });
+        
+        previewModal.addEventListener('click', (e) => {
+            if (e.target === previewModal) {
+                previewModal.style.display = 'none';
+            }
+        });
+        
+        carouselPrev.addEventListener('click', () => {
+            mudarSlide(-1);
+        });
+        
+        carouselNext.addEventListener('click', () => {
+            mudarSlide(1);
+        });
+        
+        // Adicionar evento de clique às bolinhas de evolução
+        evolutionStages.forEach((stage, index) => {
+            stage.addEventListener('click', () => {
+                carregarCarrossel(index);
+                previewModal.style.display = 'flex';
+            });
+        });
+        
+        // Função para carregar o carrossel
+        function carregarCarrossel(slideInicial = 0) {
+            // Limpar conteúdo anterior
+            carouselContent.innerHTML = '';
+            carouselDots.innerHTML = '';
+            
+            // Definir slide inicial
+            currentSlide = Math.min(slideInicial, niveis.length - 1);
+            
+            // Obter nível atual do usuário
+            const pontosTotal = calcularPontosTotais();
+            let nivelAtualUsuario = 1;
+            
+            for (let i = niveis.length - 1; i >= 0; i--) {
+                if (pontosTotal >= niveis[i].pontos) {
+                    nivelAtualUsuario = niveis[i].nivel;
+                    break;
+                }
+            }
+            
+            // Criar slides para cada nível
+            niveis.forEach((nivel, index) => {
+                // Verificar se está bloqueado
+                const isLocked = nivel.nivel > nivelAtualUsuario;
+                
+                // Criar slide
+                const slide = document.createElement('div');
+                slide.className = 'carousel-slide';
+                slide.style.transform = `translateX(${(index - currentSlide) * 100}%)`;
+                
+                // Criar imagem
+                const img = document.createElement('img');
+                img.className = 'carousel-avatar';
+                img.src = nivel.imagem;
+                img.alt = `Avatar nível ${nivel.nivel}`;
+                
+                // Fallback para imagens que não carregam
+                img.onerror = function() {
+                    this.src = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"><rect fill="%23eee" width="300" height="300"/><text fill="%23999" font-family="sans-serif" font-size="24" x="50%" y="50%" text-anchor="middle" dominant-baseline="middle">Nível ${nivel.nivel}</text></svg>`;
+                };
+                
+                // Criar informações
+                const info = document.createElement('div');
+                info.className = 'carousel-info';
+                
+                const levelTitle = document.createElement('div');
+                levelTitle.className = 'carousel-level';
+                levelTitle.textContent = `Nível ${nivel.nivel}: ${nivel.nome}`;
+                
+                const pointsInfo = document.createElement('div');
+                pointsInfo.className = 'carousel-points';
+                pointsInfo.textContent = `${nivel.pontos} pontos necessários`;
+                
+                const statusBadge = document.createElement('div');
+                statusBadge.className = `carousel-status ${isLocked ? 'locked' : 'unlocked'}`;
+                statusBadge.textContent = isLocked ? '🔒 Bloqueado' : '✅ Desbloqueado';
+                
+                // Montar a estrutura
+                info.appendChild(levelTitle);
+                info.appendChild(pointsInfo);
+                info.appendChild(statusBadge);
+                
+                slide.appendChild(img);
+                slide.appendChild(info);
+                carouselContent.appendChild(slide);
+                
+                // Criar ponto de navegação
+                const dot = document.createElement('div');
+                dot.className = 'carousel-dot';
+                if (index === currentSlide) {
+                    dot.classList.add('active');
+                }
+                
+                // Evento de clique no ponto
+                dot.addEventListener('click', () => {
+                    irParaSlide(index);
+                });
+                
+                carouselDots.appendChild(dot);
+            });
+            
+            // Atualizar botões de navegação
+            atualizarBotoesNavegacao();
+        }
+        
+        // Navegar para o próximo/anterior slide
+        function mudarSlide(direcao) {
+            const novoIndex = currentSlide + direcao;
+            
+            // Verificar limites
+            if (novoIndex < 0 || novoIndex >= niveis.length) {
+                return;
+            }
+            
+            irParaSlide(novoIndex);
+        }
+        
+        // Ir para um slide específico
+        function irParaSlide(index) {
+            currentSlide = index;
+            
+            // Atualizar posição de todos os slides
+            const slides = document.querySelectorAll('.carousel-slide');
+            slides.forEach((slide, idx) => {
+                slide.style.transform = `translateX(${(idx - currentSlide) * 100}%)`;
+            });
+            
+            // Atualizar pontos ativos
+            const dots = document.querySelectorAll('.carousel-dot');
+            dots.forEach((dot, idx) => {
+                dot.classList.toggle('active', idx === currentSlide);
+            });
+            
+            // Atualizar botões de navegação
+            atualizarBotoesNavegacao();
+        }
+        
+        // Atualizar visibilidade dos botões de navegação
+        function atualizarBotoesNavegacao() {
+            carouselPrev.style.visibility = currentSlide > 0 ? 'visible' : 'hidden';
+            carouselNext.style.visibility = currentSlide < niveis.length - 1 ? 'visible' : 'hidden';
+        }
+        
+        // Inicializar
+        window.addEventListener('load', carregarProgresso);
+        
+        // Atualizar a cada 5 minutos para verificar mudanças em outras páginas
+        setInterval(() => {
+            verificarAtividades();
+            verificarPalavrasIngles();
+            verificarDieta();
+            verificarFinancas();
+            atualizarInterface();
+            salvarProgresso();
+        }, 5 * 60 * 1000);
+    </script>
+</body>
+</html>

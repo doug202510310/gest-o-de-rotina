@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão de rotina</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Estilos para o ícone de armazenamento */
+        .storage-icon {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background-color: #3498db;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 999;
+            transition: transform 0.3s;
+        }
+        
+        .storage-icon:hover {
+            transform: scale(1.1);
+        }
+        
+        /* Estilos para o card de armazenamento */
+        .storage-card {
+            position: fixed;
+            bottom: 70px;
+            left: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            padding: 15px;
+            width: 250px;
+            z-index: 998;
+            display: none;
+        }
+        
+        .storage-card h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: #333;
+            font-size: 16px;
+        }
+        
+        .storage-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        
+        .storage-name {
+            font-weight: bold;
+        }
+        
+        .storage-size {
+            color: #666;
+        }
+        
+        .storage-bar {
+            height: 8px;
+            background-color: #ecf0f1;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+        
+        .storage-bar-fill {
+            height: 100%;
+            background-color: #3498db;
+            border-radius: 4px;
+            transition: width 0.3s;
+        }
+        
+        .storage-total {
+            text-align: right;
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            color: #999;
+        }
+        
+        .close-btn:hover {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+         <ul class="header__menu">
+        <li><img src="img/avatar.jpg" alt="avatar" class="avatar"></li>
+        <li><a href="#grafico">Gráfico</a></li>
+        <li><a href=progesso.html>Progresso</a></li>
+    </ul>
+         </header>
+  <main>
+      <h1 class="cartões__titulo">Planejamento de Rotina</h1>
+      <ul class="cartões__objetivos">
+        <li class="cartão">Financeiro <a href="financeiro.html" ><img src="img/financeiro.jpg" alt="financeiro" class="imagem_cartão"></a></li>
+        <li class="cartão">Calendário <a href="calendario.html" ><img src="img/calendario.jpg" alt="calendario" class="imagem_cartão"></a></li>
+        <li class="cartão">Atividades <a href="atividades.html" ><img src="img/atividades.jpg" alt="atividades" class="imagem_cartão"></a></li>
+        <li class="cartão">Inglês <a href="ingles.html" ><img src="img/ingles.jpg" alt="ingles" class="imagem_cartão"></a></li>
+        <li class="cartão">Dieta <a href="dieta.html" ><img src="img/dieta.jpg" alt="dieta" class="imagem_cartão"></a></li>
+      </ul>
+  </main>
+  
+  <!-- Ícone de Armazenamento -->
+  <div class="storage-icon" id="storage-icon" title="Ver uso de armazenamento">
+      💾
+  </div>
+  
+  <!-- Card de Informações de Armazenamento -->
+  <div class="storage-card" id="storage-card">
+      <button class="close-btn" id="close-storage">&times;</button>
+      <h3>Uso de Armazenamento</h3>
+      <div id="storage-items">
+          <!-- Items serão adicionados via JavaScript -->
+      </div>
+      <div class="storage-bar">
+          <div class="storage-bar-fill" id="storage-bar-fill"></div>
+      </div>
+      <div class="storage-total" id="storage-total">Total: 0 KB</div>
+  </div>
+
+  <script>
+      // Elementos do DOM
+      const storageIcon = document.getElementById('storage-icon');
+      const storageCard = document.getElementById('storage-card');
+      const closeStorageBtn = document.getElementById('close-storage');
+      const storageItems = document.getElementById('storage-items');
+      const storageBarFill = document.getElementById('storage-bar-fill');
+      const storageTotal = document.getElementById('storage-total');
+      
+      // Mostrar/ocultar o card de armazenamento
+      storageIcon.addEventListener('click', () => {
+          calculateStorageUsage();
+          storageCard.style.display = 'block';
+      });
+      
+      closeStorageBtn.addEventListener('click', () => {
+          storageCard.style.display = 'none';
+      });
+      
+      // Calcular o uso de armazenamento
+      function calculateStorageUsage() {
+          // Limpar items anteriores
+          storageItems.innerHTML = '';
+          
+          // Lista de chaves do localStorage por página
+          const storageKeys = {
+              'Financeiro': ['controleFinanceiro'],
+              'Calendário': ['atividades'],
+              'Inglês': ['vocabulary'],
+              'Dieta': ['dieta'],
+              // Adicione outras páginas/chaves conforme necessário
+          };
+          
+          let totalSize = 0;
+          const storageData = [];
+          
+          // Calcular o tamanho de cada item
+          for (const [page, keys] of Object.entries(storageKeys)) {
+              let pageSize = 0;
+              
+              keys.forEach(key => {
+                  const item = localStorage.getItem(key);
+                  if (item) {
+                      // Calcular o tamanho em bytes
+                      const size = new Blob([item]).size;
+                      pageSize += size;
+                  }
+              });
+              
+              if (pageSize > 0) {
+                  totalSize += pageSize;
+                  storageData.push({
+                      name: page,
+                      size: pageSize
+                  });
+              }
+          }
+          
+          // Ordenar por tamanho (maior primeiro)
+          storageData.sort((a, b) => b.size - a.size);
+          
+          // Criar os elementos para cada item
+          storageData.forEach(item => {
+              const formattedSize = formatSize(item.size);
+              const itemElement = document.createElement('div');
+              itemElement.className = 'storage-item';
+              itemElement.innerHTML = `
+                  <span class="storage-name">${item.name}</span>
+                  <span class="storage-size">${formattedSize}</span>
+              `;
+              storageItems.appendChild(itemElement);
+          });
+          
+          // Atualizar barra de progresso
+          // Suponha que o limite típico do localStorage é 5MB (5,242,880 bytes)
+          const storageLimit = 5 * 1024 * 1024;
+          const percentUsed = (totalSize / storageLimit) * 100;
+          storageBarFill.style.width = `${Math.min(percentUsed, 100)}%`;
+          
+          // Atualizar total
+          storageTotal.textContent = `Total: ${formatSize(totalSize)} de 5 MB`;
+      }
+      
+      // Função para formatar o tamanho em KB ou MB
+      function formatSize(bytes) {
+          if (bytes < 1024) {
+              return bytes + " bytes";
+          } else if (bytes < 1024 * 1024) {
+              return (bytes / 1024).toFixed(1) + " KB";
+          } else {
+              return (bytes / (1024 * 1024)).toFixed(2) + " MB";
+          }
+      }
+  </script>
+</body>
+</html>

@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle Financeiro</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: rgb(31, 30, 30);
+            padding-bottom: 120px;
+        }
+        h1 {
+            text-align: center;
+            color: white;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: space-between;
+        }
+        .coluna {
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            flex: 1;
+            min-width: 300px;
+        }
+        h2 {
+            color: #3498db;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 5px;
+        }
+        h3 {
+            color: #2c3e50;
+            margin-top: 15px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin: 8px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .item-label {
+            flex-grow: 1;
+        }
+        .item-value {
+            width: 100px;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .result {
+            font-weight: bold;
+            margin-top: 10px;
+            background-color: #f9f9f9;
+            padding: 8px;
+            border-radius: 4px;
+            border-left: 4px solid #3498db;
+        }
+        .result span {
+            float: right;
+        }
+        .saldo-positivo {
+            color: green;
+        }
+        .saldo-negativo {
+            color: red;
+        }
+        .saldo-dividendos {
+            color: #e67e22;
+        }
+        .desconto {
+            border-left: 4px solid #27ae60;
+        }
+        .dinheiro-conquistado {
+            border-left: 4px solid #9b59b6;
+        }
+        .btn-add {
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+        .btn-add:hover {
+            background-color: #27ae60;
+        }
+        .botao-voltar {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+            z-index: 1000;
+            font-size: 24px;
+        }
+        .botao-voltar:hover {
+            background-color: #2980b9;
+            transform: scale(1.1);
+        }
+        #status-salvamento {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            padding: 8px 15px;
+            border-radius: 4px;
+            background-color: rgba(39, 174, 96, 0.9);
+            color: white;
+            font-size: 14px;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+        #status-salvamento.visivel {
+            opacity: 1;
+        }
+        .botao-preencher {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .botao-preencher:hover {
+            background: #229954;
+            transform: translateY(-1px);
+        }
+        .botao-relatorio {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            background: #9b59b6;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .botao-relatorio:hover {
+            background: #8e44ad;
+        }
+        h4{
+            text-align: end;
+        }
+    </style>
+</head>
+<body>
+    <h1>Controle Financeiro</h1>
+    
+    <div class="container">
+        <div class="coluna">
+            <h2>Gastos</h2>
+            <h3>Gastos Fixos</h3>
+            <ul id="gastos-fixos">
+                <li>
+                    <span class="item-label">Faculdade</span>
+                    <input type="number" class="item-value gasto-fixo" placeholder="Valor" step="0.01" id="faculdade">
+                </li>
+                <li>
+                    <span class="item-label">Transporte</span>
+                    <input type="number" class="item-value gasto-fixo" placeholder="Valor" step="0.01" id="transporte">
+                </li>
+                <li>
+                    <span class="item-label">Curso</span>
+                    <input type="number" class="item-value gasto-fixo" placeholder="Valor" step="0.01" id="curso">
+                </li>
+                <li>
+                    <span class="item-label">YouTube</span>
+                    <input type="number" class="item-value gasto-fixo" placeholder="Valor" step="0.01" id="youtube">
+                </li>
+            </ul>
+            
+            <div class="result" id="gasto-mensal">Gasto mensal = <span>R$ 0,00</span></div>
+            <div class="result" id="gasto-anual">Gasto anual = <span>R$ 0,00</span></div>
+            
+            <h3>Gastos Não Recorrentes</h3>
+            <ul id="gastos-nao-recorrentes">
+                <li>
+                    <span class="item-label">Alimentação</span>
+                    <input type="number" class="item-value gasto-nao-recorrente" placeholder="Valor" step="0.01" id="alimentacao">
+                </li>
+                <li>
+                    <span class="item-label">Compras</span>
+                    <input type="number" class="item-value gasto-nao-recorrente" placeholder="Valor" step="0.01" id="compras">
+                </li>
+                <li>
+                    <span class="item-label">Saúde</span>
+                    <input type="number" class="item-value gasto-nao-recorrente" placeholder="Valor" step="0.01" id="saude">
+                </li>
+                <li>
+                    <span class="item-label">Outros</span>
+                    <input type="number" class="item-value gasto-nao-recorrente" placeholder="Valor" step="0.01" id="outros">
+                </li>
+            </ul>
+            
+            <div class="result" id="gasto-nao-recorrente">Gasto não recorrente = <span>R$ 0,00</span></div>
+            <div class="result" id="gasto-anual-revisado">Gasto anual revisado = <span>R$ 0,00</span></div>
+        </div>
+
+        <div class="coluna">
+            <h2>Receitas</h2>
+            <h3>Receitas Fixas</h3>
+            <ul id="receitas-fixas">
+                <li>
+                    <span class="item-label">Investimento</span>
+                    <input type="number" class="item-value receita-fixa" placeholder="Valor" step="0.01" id="investimento">
+                </li>
+                <li>
+                    <span class="item-label">Caixa</span>
+                    <input type="number" class="item-value" id="valor-caixa" placeholder="Valor" step="0.01">
+                </li>
+                <li>
+                    <span class="item-label">Dividendos mensal</span>
+                    <input type="number" class="item-value" id="dividendos-mensal" placeholder="Valor" step="0.01">
+                </li>
+            </ul>
+            
+            <h3>Dinheiro Conquistado <button class="btn-add" id="add-conquista">+ Adicionar</button></h3>
+            <ul id="dinheiro-conquistado"></ul>
+            <div class="result dinheiro-conquistado" id="conquista-total">Dinheiro conquistado = <span>R$ 0,00</span></div>
+            
+            <h3>Descontos em Gastos</h3>
+            <ul id="descontos">
+                <li>
+                    <span class="item-label">Gastos evitados</span>
+                    <input type="number" class="item-value" id="valor-desconto" placeholder="Valor" step="0.01">
+                </li>
+            </ul>
+            <div class="result desconto" id="desconto-total">Desconto aplicado = <span>R$ 0,00</span></div>
+            
+            <div class="result" id="receita-total">Receita Total = <span>R$ 0,00</span></div>
+        </div>
+
+        <div class="coluna">
+            <h2>Saldo</h2>
+            <div class="result" id="saldo-projetado">Saldo projetado = <span>R$ 0,00</span></div>
+            <div id="recomendacao" style="margin-top: 20px; padding: 10px; border-radius: 5px;"></div>
+            
+            <div style="margin-top: 20px;">
+                <p><small>Última atualização: <span id="ultima-atualizacao">Nunca</span></small></p>
+                <button onclick="limparDados()" style="background-color: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">Limpar Dados</button>
+                <button onclick="salvarDados()" style="background-color: #27ae60; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; margin-left: 10px;">
+                    💾 Salvar Dados
+                </button>
+            </div>
+        </div>
+    </div>
+<h4><a href="index.html">Voltar a pagina principal</a></h4>
+<script>
+    // Script de controle financeiro
+document.addEventListener('DOMContentLoaded', function() {
+    // Carrega dados salvos quando a página é carregada
+    carregarDados();
+    
+    // Adiciona listeners para recalcular quando houver mudanças
+    document.querySelectorAll('input').forEach(input => {
+        input.addEventListener('input', function() {
+            calcularTudo();
+            // Auto-save when any input changes
+            if (this.className.includes('conquista-valor')) {
+                salvarDadosAutomatico();
+            }
+        });
+    });
+    
+    // Configura botão para adicionar "Dinheiro Conquistado"
+    document.getElementById('add-conquista').addEventListener('click', adicionarConquista);
+    
+    // Calcula tudo inicialmente
+    calcularTudo();
+});
+
+// Função para calcular todos os valores
+function calcularTudo() {
+    calcularGastoMensal();
+calcularGastoAnual();
+    calcularGastosNaoRecorrentes();
+    calcularGastoAnualRevisado();
+    calcularDinheiroConquistado();
+    calcularDescontoAplicado();
+    calcularReceitaTotal();
+    calcularSaldoProjetado();
+}
+
+// Calcula Gasto Mensal (soma de todas as despesas fixas)
+function calcularGastoMensal() {
+    let total = 0;
+    document.querySelectorAll('.gasto-fixo').forEach(input => {
+        total += parseFloat(input.value || 0);
+    });
+    
+    document.querySelector('#gasto-mensal span').textContent = `R$ ${total.toFixed(2)}`;
+    return total;
+}
+
+// Calcula Gasto Anual (despesas mensais × meses restantes no ano)
+function calcularGastoAnual() {
+    const gastoMensal = parseFloat(document.querySelector('#gasto-mensal span').textContent.replace('R$ ', '') || 0);
+    
+    // Calcula meses restantes no ano
+    const hoje = new Date();
+    const mesesRestantes = 12 - hoje.getMonth();
+    
+    const gastoAnual = gastoMensal * mesesRestantes;
+    document.querySelector('#gasto-anual span').textContent = `R$ ${gastoAnual.toFixed(2)} (${mesesRestantes} meses)`;
+    return gastoAnual;
+}
+
+// Calcula Gastos Não Recorrentes (soma das despesas não recorrentes)
+function calcularGastosNaoRecorrentes() {
+    let total = 0;
+    document.querySelectorAll('.gasto-nao-recorrente').forEach(input => {
+        total += parseFloat(input.value || 0);
+    });
+    
+    document.querySelector('#gasto-nao-recorrente span').textContent = `R$ ${total.toFixed(2)}`;
+    return total;
+}
+
+// Calcula Gasto Anual Revisado (gasto anual + gastos não recorrentes)
+function calcularGastoAnualRevisado() {
+    const gastoAnual = parseFloat(document.querySelector('#gasto-anual span').textContent.replace(/R\$ ([\d,.]+).*/, '$1') || 0);
+    const gastoNaoRecorrente = parseFloat(document.querySelector('#gasto-nao-recorrente span').textContent.replace('R$ ', '') || 0);
+    
+    const gastoAnualRevisado = gastoAnual + gastoNaoRecorrente;
+    document.querySelector('#gasto-anual-revisado span').textContent = `R$ ${gastoAnualRevisado.toFixed(2)}`;
+    return gastoAnualRevisado;
+}
+
+// Calcula Dinheiro Conquistado (soma de novos ganhos)
+function calcularDinheiroConquistado() {
+    let total = 0;
+    document.querySelectorAll('#dinheiro-conquistado input').forEach(input => {
+        total += parseFloat(input.value || 0);
+    });
+    
+    document.querySelector('#conquista-total span').textContent = `R$ ${total.toFixed(2)}`;
+    return total;
+}
+
+// Adiciona novo item ao Dinheiro Conquistado
+function adicionarConquista() {
+    const lista = document.getElementById('dinheiro-conquistado');
+    const novoItem = document.createElement('li');
+    
+    const descricao = document.createElement('input');
+    descricao.type = 'text';
+    descricao.className = 'item-label conquista-descricao';
+    descricao.placeholder = 'Descrição';
+    descricao.addEventListener('change', salvarDadosAutomatico);
+    
+    const valor = document.createElement('input');
+    valor.type = 'number';
+    valor.className = 'item-value conquista-valor';
+    valor.placeholder = 'Valor';
+    valor.step = '0.01';
+    valor.addEventListener('input', function() {
+        calcularTudo();
+        salvarDadosAutomatico();
+    });
+    
+    const btnRemover = document.createElement('button');
+    btnRemover.textContent = 'X';
+    btnRemover.style.marginLeft = '10px';
+    btnRemover.style.backgroundColor = '#e74c3c';
+    btnRemover.style.color = 'white';
+    btnRemover.style.border = 'none';
+    btnRemover.style.borderRadius = '4px';
+    btnRemover.style.cursor = 'pointer';
+    btnRemover.style.padding = '3px 8px';
+    btnRemover.addEventListener('click', function() {
+        lista.removeChild(novoItem);
+        calcularTudo();
+        salvarDadosAutomatico();
+    });
+    
+    novoItem.appendChild(descricao);
+    novoItem.appendChild(valor);
+    novoItem.appendChild(btnRemover);
+    lista.appendChild(novoItem);
+    
+    // Auto-save when a new item is added
+    salvarDadosAutomatico();
+}
+
+// New function for automatic saving
+function salvarDadosAutomatico() {
+    const dados = {
+        gastosFixos: {},
+        gastosNaoRecorrentes: {},
+        receitasFixas: {},
+        dinheiroConquistado: [],
+        descontos: {},
+        ultimaAtualizacao: new Date().toLocaleString()
+    };
+    
+    // Save fixed expenses
+    document.querySelectorAll('.gasto-fixo').forEach(input => {
+        dados.gastosFixos[input.id] = input.value;
+    });
+    
+    // Save non-recurring expenses
+    document.querySelectorAll('.gasto-nao-recorrente').forEach(input => {
+        dados.gastosNaoRecorrentes[input.id] = input.value;
+    });
+    
+    // Save fixed income
+    dados.receitasFixas.investimento = document.getElementById('investimento').value;
+    dados.receitasFixas.caixa = document.getElementById('valor-caixa').value;
+    dados.receitasFixas.dividendos = document.getElementById('dividendos-mensal').value;
+    
+    // Save conquered money items - this is crucial
+    document.querySelectorAll('#dinheiro-conquistado li').forEach(item => {
+        const descricao = item.querySelector('.conquista-descricao')?.value || '';
+        const valor = item.querySelector('.conquista-valor')?.value || '0';
+        dados.dinheiroConquistado.push({ descricao, valor });
+    });
+    
+    // Save discounts
+    dados.descontos.valorDesconto = document.getElementById('valor-desconto').value;
+    
+    // Save to localStorage silently without showing a notification
+    localStorage.setItem('financeiro-dados', JSON.stringify(dados));
+    
+    // Update last save timestamp
+    document.getElementById('ultima-atualizacao').textContent = dados.ultimaAtualizacao;
+}
+
+// Calcula Desconto Aplicado (economia em despesas)
+function calcularDescontoAplicado() {
+    const valorDesconto = parseFloat(document.getElementById('valor-desconto').value || 0);
+    document.querySelector('#desconto-total span').textContent = `R$ ${valorDesconto.toFixed(2)}`;
+    return valorDesconto;
+}
+
+// Calcula Receita Total (soma de receitas fixas)
+function calcularReceitaTotal() {
+    const investimento = parseFloat(document.getElementById('investimento').value || 0);
+    const caixa = parseFloat(document.getElementById('valor-caixa').value || 0);
+    const dividendos = parseFloat(document.getElementById('dividendos-mensal').value || 0);
+    const conquistado = calcularDinheiroConquistado();
+    
+    const total = investimento + caixa + dividendos + conquistado;
+    document.querySelector('#receita-total span').textContent = `R$ ${total.toFixed(2)}`;
+    return total;
+}
+
+// Calcula Saldo Projetado
+function calcularSaldoProjetado() {
+    const caixa = parseFloat(document.getElementById('valor-caixa').value || 0);
+    const gastoAnualRevisado = parseFloat(document.querySelector('#gasto-anual-revisado span').textContent.replace('R$ ', '') || 0);
+    const dividendosMensais = parseFloat(document.getElementById('dividendos-mensal').value || 0);
+    const descontoAplicado = parseFloat(document.querySelector('#desconto-total span').textContent.replace('R$ ', '') || 0);
+    const dinheiroConquistado = parseFloat(document.querySelector('#conquista-total span').textContent.replace('R$ ', '') || 0);
+    
+    // Calcula meses restantes no ano
+    const hoje = new Date();
+    const mesesRestantes = 12 - hoje.getMonth();
+    
+    // Calcula dividendos totais para os meses restantes
+    const dividendosTotal = dividendosMensais * mesesRestantes;
+    
+    // Aplica o desconto ao gasto anual revisado e inclui dinheiro conquistado como recurso
+    let saldo = caixa + dinheiroConquistado - (gastoAnualRevisado - descontoAplicado);
+    let recomendacaoHTML = '';
+    
+    // Formata e exibe o saldo
+    document.querySelector('#saldo-projetado span').textContent = `R$ ${saldo.toFixed(2)}`;
+    
+    // Define a classe de cor apropriada
+    const saldoElement = document.getElementById('saldo-projetado');
+    saldoElement.className = 'result';
+    
+    if (saldo < 0) {
+        // Saldo negativo - tenta cobrir com dividendos
+        saldoElement.classList.add('saldo-negativo');
+        
+        if (Math.abs(saldo) <= dividendosTotal) {
+            // Dividendos podem cobrir o saldo negativo
+            const dividendosNecessarios = Math.abs(saldo);
+            const mesesDividendosNecessarios = Math.ceil(dividendosNecessarios / dividendosMensais);
+            
+            recomendacaoHTML = `
+                <div style="background-color: #fff3cd; padding: 10px; border-left: 4px solid #e67e22;">
+                    <strong>Recomendação:</strong> Utilize R$ ${dividendosNecessarios.toFixed(2)} dos dividendos para cobrir o saldo negativo.
+                    <br>Isso equivale aos dividendos de aproximadamente ${mesesDividendosNecessarios} ${mesesDividendosNecessarios === 1 ? 'mês' : 'meses'}.
+                </div>
+            `;
+        } else {
+            // Dividendos não conseguem cobrir - precisa retirar dos investimentos
+            const aposUsarDividendos = saldo + dividendosTotal;
+            const retirarInvestimentos = Math.abs(aposUsarDividendos);
+            
+            recomendacaoHTML = `
+                <div style="background-color: #f8d7da; padding: 10px; border-left: 4px solid #dc3545;">
+                    <strong>Alerta:</strong> Mesmo após utilizar R$ ${dividendosTotal.toFixed(2)} dos dividendos, ainda faltam R$ ${retirarInvestimentos.toFixed(2)}.
+                    <br>Será necessário retirar este valor dos investimentos.
+                </div>
+            `;
+        }
+    } else {
+        // Saldo positivo
+        saldoElement.classList.add('saldo-positivo');
+        recomendacaoHTML = `
+            <div style="background-color: #d4edda; padding: 10px; border-left: 4px solid #28a745;">
+                <strong>Ótimo!</strong> Você tem um saldo positivo de R$ ${saldo.toFixed(2)}.
+                <br>Recomendamos investir este valor para aumentar seus rendimentos futuros.
+            </div>
+        `;
+    }
+    
+    document.getElementById('recomendacao').innerHTML = recomendacaoHTML;
+}
+
+// Salva todos os dados no localStorage
+function salvarDados() {
+    const dados = {
+        gastosFixos: {},
+        gastosNaoRecorrentes: {},
+        receitasFixas: {},
+        dinheiroConquistado: [],
+        descontos: {},
+        ultimaAtualizacao: new Date().toLocaleString()
+    };
+    
+    // Salva despesas fixas
+    document.querySelectorAll('.gasto-fixo').forEach(input => {
+        dados.gastosFixos[input.id] = input.value;
+    });
+    
+    // Salva despesas não recorrentes
+    document.querySelectorAll('.gasto-nao-recorrente').forEach(input => {
+        dados.gastosNaoRecorrentes[input.id] = input.value;
+    });
+    
+    // Salva receitas fixas
+    dados.receitasFixas.investimento = document.getElementById('investimento').value;
+    dados.receitasFixas.caixa = document.getElementById('valor-caixa').value;
+    dados.receitasFixas.dividendos = document.getElementById('dividendos-mensal').value;
+    
+    // Salva itens de dinheiro conquistado
+    document.querySelectorAll('#dinheiro-conquistado li').forEach(item => {
+        const descricao = item.querySelector('.conquista-descricao')?.value || '';
+        const valor = item.querySelector('.conquista-valor')?.value || '0';
+        dados.dinheiroConquistado.push({ descricao, valor });
+    });
+    
+    // Salva descontos
+    dados.descontos.valorDesconto = document.getElementById('valor-desconto').value;
+    
+    // Salva no localStorage
+    localStorage.setItem('financeiro-dados', JSON.stringify(dados));
+    
+    // Atualiza timestamp da última salvamento
+    document.getElementById('ultima-atualizacao').textContent = dados.ultimaAtualizacao;
+    
+    // Mostra mensagem de salvamento
+    const statusSalvamento = document.getElementById('status-salvamento');
+    statusSalvamento.classList.add('visivel');
+    
+    setTimeout(() => {
+        statusSalvamento.classList.remove('visivel');
+    }, 2000);
+}
+
+// Carrega dados salvos do localStorage
+function carregarDados() {
+    const dadosSalvos = localStorage.getItem('financeiro-dados');
+    
+    if (!dadosSalvos) return;
+    
+    const dados = JSON.parse(dadosSalvos);
+    
+    // Carrega despesas fixas
+    for (const [id, valor] of Object.entries(dados.gastosFixos)) {
+        const elemento = document.getElementById(id);
+        if (elemento) elemento.value = valor;
+    }
+    
+    // Carrega despesas não recorrentes
+    for (const [id, valor] of Object.entries(dados.gastosNaoRecorrentes)) {
+        const elemento = document.getElementById(id);
+        if (elemento) elemento.value = valor;
+    }
+    
+    // Carrega receitas fixas
+    document.getElementById('investimento').value = dados.receitasFixas.investimento || '';
+    document.getElementById('valor-caixa').value = dados.receitasFixas.caixa || '';
+    document.getElementById('dividendos-mensal').value = dados.receitasFixas.dividendos || '';
+    
+    // Carrega itens de dinheiro conquistado
+    const listaConquista = document.getElementById('dinheiro-conquistado');
+    listaConquista.innerHTML = ''; // Limpa itens existentes
+    
+    dados.dinheiroConquistado.forEach(item => {
+        const novoItem = document.createElement('li');
+        
+        const descricao = document.createElement('input');
+        descricao.type = 'text';
+        descricao.className = 'item-label conquista-descricao';
+        descricao.value = item.descricao;
+        
+        const valor = document.createElement('input');
+        valor.type = 'number';
+        valor.className = 'item-value conquista-valor';
+        valor.value = item.valor;
+        valor.step = '0.01';
+        valor.addEventListener('input', calcularTudo);
+        
+        const btnRemover = document.createElement('button');
+        btnRemover.textContent = 'X';
+        btnRemover.style.marginLeft = '10px';
+        btnRemover.style.backgroundColor = '#e74c3c';
+        btnRemover.style.color = 'white';
+        btnRemover.style.border = 'none';
+        btnRemover.style.borderRadius = '4px';
+        btnRemover.style.cursor = 'pointer';
+        btnRemover.style.padding = '3px 8px';
+        btnRemover.addEventListener('click', function() {
+            listaConquista.removeChild(novoItem);
+            calcularTudo();
+        });
+        
+        novoItem.appendChild(descricao);
+        novoItem.appendChild(valor);
+        novoItem.appendChild(btnRemover);
+        listaConquista.appendChild(novoItem);
+    });
+    
+    // Carrega descontos
+    document.getElementById('valor-desconto').value = dados.descontos.valorDesconto || '';
+    
+    // Atualiza timestamp do último salvamento
+    document.getElementById('ultima-atualizacao').textContent = dados.ultimaAtualizacao || 'Nunca';
+    
+    // Calcula tudo após carregar
+    calcularTudo();
+}
+
+// Limpa todos os dados
+function limparDados() {
+    if (confirm('Tem certeza que deseja limpar todos os dados?')) {
+        localStorage.removeItem('financeiro-dados');
+        location.reload();
+    }
+}
+
+// Preenche com dados de exemplo para teste
+function preencherAutomaticamente() {
+    // Despesas fixas
+    document.getElementById('faculdade').value = '500.00';
+    document.getElementById('transporte').value = '200.00';
+    document.getElementById('curso').value = '300.00';
+    document.getElementById('youtube').value = '20.00';
+    
+    // Despesas não recorrentes
+    document.getElementById('alimentacao').value = '800.00';
+    document.getElementById('compras').value = '500.00';
+    document.getElementById('saude').value = '200.00';
+    document.getElementById('outros').value = '300.00';
+    
+    // Receitas fixas
+    document.getElementById('investimento').value = '1000.00';
+    document.getElementById('valor-caixa').value = '5000.00';
+    document.getElementById('dividendos-mensal').value = '500.00';
+    
+    // Desconto
+    document.getElementById('valor-desconto').value = '200.00';
+    
+    // Calcula tudo
+    calcularTudo();
+}
+
+// Gera e exibe relatório financeiro
+function mostrarRelatorio() {
+    // Obtém todos os valores calculados
+    const gastoMensal = parseFloat(document.querySelector('#gasto-mensal span').textContent.replace('R$ ', '') || 0);
+    const gastoAnual = parseFloat(document.querySelector('#gasto-anual span').textContent.replace(/R\$ ([\d,.]+).*/, '$1') || 0);
+    const gastoNaoRecorrente = parseFloat(document.querySelector('#gasto-nao-recorrente span').textContent.replace('R$ ', '') || 0);
+    const gastoAnualRevisado = parseFloat(document.querySelector('#gasto-anual-revisado span').textContent.replace('R$ ', '') || 0);
+    const dinheiroConquistado = parseFloat(document.querySelector('#conquista-total span').textContent.replace('R$ ', '') || 0);
+    const descontoAplicado = parseFloat(document.querySelector('#desconto-total span').textContent.replace('R$ ', '') || 0);
+    const receitaTotal = parseFloat(document.querySelector('#receita-total span').textContent.replace('R$ ', '') || 0);
+    const saldoProjetado = parseFloat(document.querySelector('#saldo-projetado span').textContent.replace('R$ ', '') || 0);
+    
+    // Calcula meses restantes no ano
+    const hoje = new Date();
+    const mesesRestantes = 12 - hoje.getMonth();
+    
+    // Obtém valores fixos
+    const caixa = parseFloat(document.getElementById('valor-caixa').value || 0);
+    const dividendosMensais = parseFloat(document.getElementById('dividendos-mensal').value || 0);
+    const dividendosTotal = dividendosMensais * mesesRestantes;
+    
+    // Cria overlay modal
+    const overlay = document.createElement('div');
+    overlay.style.position = 'fixed';
+    overlay.style.top = '0';
+    overlay.style.left = '0';
+    overlay.style.width = '100%';
+    overlay.style.height = '100%';
+    overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+    overlay.style.zIndex = '1000';
+    overlay.style.display = 'flex';
+    overlay.style.justifyContent = 'center';
+    overlay.style.alignItems = 'center';
+    
+    // Cria container do relatório
+    const relatorio = document.createElement('div');
+    relatorio.style.width = '80%';
+    relatorio.style.maxWidth = '800px';
+    relatorio.style.maxHeight = '90vh';
+    relatorio.style.overflowY = 'auto';
+    relatorio.style.backgroundColor = 'white';
+    relatorio.style.padding = '30px';
+    relatorio.style.borderRadius = '8px';
+    relatorio.style.boxShadow = '0 0 20px rgba(0, 0, 0, 0.3)';
+    relatorio.style.position = 'relative';
+    
+    // Cria botão de fechar
+    const botaoFechar = document.createElement('button');
+    botaoFechar.textContent = '×';
+    botaoFechar.style.position = 'absolute';
+    botaoFechar.style.top = '10px';
+    botaoFechar.style.right = '15px';
+    botaoFechar.style.fontSize = '24px';
+    botaoFechar.style.border = 'none';
+    botaoFechar.style.background = 'none';
+    botaoFechar.style.cursor = 'pointer';
+    botaoFechar.style.color = '#555';
+    botaoFechar.addEventListener('click', function() {
+        document.body.removeChild(overlay);
+    });
+    
+    // Cria conteúdo do relatório com status e recomendações
+    const dataAtual = hoje.toLocaleDateString('pt-BR');
+    const statusColor = saldoProjetado >= 0 ? '#28a745' : (saldoProjetado + dividendosTotal >= 0 ? '#e67e22' : '#dc3545');
+    
+    const conteudoRelatorio = document.createElement('div');
+    conteudoRelatorio.innerHTML = `
+        <h2 style="text-align: center; color: #3498db; margin-bottom: 25px; border-bottom: 2px solid #3498db; padding-bottom: 10px;">
+            Relatório Financeiro - ${dataAtual}
+        </h2>
+        
+        <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin-bottom: 20px; border-left: 4px solid ${statusColor};">
+            <h3 style="margin-top: 0; color: ${statusColor};">
+                ${saldoProjetado >= 0 
+                    ? '✅ Suas finanças estão equilibradas!' 
+                    : (saldoProjetado + dividendosTotal >= 0 
+                        ? '⚠️ Suas finanças estão apertadas, mas os dividendos podem cobrir.' 
+                        : '❌ Suas finanças estão negativas e exigem atenção urgente.')}
+            </h3>
+            <p>Este relatório resume sua situação financeira atual e projeções para os próximos ${mesesRestantes} meses.</p>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
+            <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; border-left: 4px solid #3498db;">
+                <h3 style="margin-top: 0; color: #3498db;">Resumo de Gastos</h3>
+                <p><strong>Gasto Mensal:</strong> R$ ${gastoMensal.toFixed(2)}</p>
+                <p><strong>Gasto Não Recorrente:</strong> R$ ${gastoNaoRecorrente.toFixed(2)}</p>
+                <p><strong>Gasto Anual Revisado:</strong> R$ ${gastoAnualRevisado.toFixed(2)}</p>
+            </div>
+            
+            <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; border-left: 4px solid #27ae60;">
+                <h3 style="margin-top: 0; color: #27ae60;">Resumo de Receitas</h3>
+                <p><strong>Caixa Disponível:</strong> R$ ${caixa.toFixed(2)}</p>
+                <p><strong>Dinheiro Conquistado:</strong> R$ ${dinheiroConquistado.toFixed(2)}</p>
+                <p><strong>Descontos Aplicados:</strong> R$ ${descontoAplicado.toFixed(2)}</p>
+                <p><strong>Receita Total:</strong> R$ ${receitaTotal.toFixed(2)}</p>
+            </div>
+        </div>
+        
+        <h3 style="color: #2c3e50; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Situação Financeira</h3>
+        <div style="background-color: ${saldoProjetado >= 0 ? '#d4edda' : '#f8d7da'}; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+            <p><strong>Saldo Projetado:</strong> <span style="color: ${saldoProjetado >= 0 ? 'green' : 'red'}">R$ ${saldoProjetado.toFixed(2)}</span></p>
+            ${saldoProjetado < 0 
+                ? (saldoProjetado + dividendosTotal >= 0 
+                    ? `<p><strong>Recomendação:</strong> Utilize R$ ${Math.abs(saldoProjetado).toFixed(2)} dos dividendos para cobrir o déficit.</p>
+                       <p>Isso equivale aos dividendos de aproximadamente ${Math.ceil(Math.abs(saldoProjetado) / dividendosMensais)} ${Math.ceil(Math.abs(saldoProjetado) / dividendosMensais) === 1 ? 'mês' : 'meses'}.</p>` 
+                    : `<p><strong>Alerta:</strong> Mesmo após utilizar R$ ${dividendosTotal.toFixed(2)} dos dividendos, ainda faltarão R$ ${Math.abs(saldoProjetado + dividendosTotal).toFixed(2)}.</p>
+                       <p><strong>Recomendação:</strong> Será necessário retirar R$ ${Math.abs(saldoProjetado + dividendosTotal).toFixed(2)} dos investimentos ou reduzir gastos.</p>`)
+                : `<p><strong>Recomendação:</strong> Você tem um saldo positivo! Considere investir R$ ${saldoProjetado.toFixed(2)} para aumentar seus rendimentos futuros.</p>`
+            }
+        </div>
+    `;
+    
+    // Adiciona conteúdo ao relatório
+    relatorio.appendChild(botaoFechar);
+    relatorio.appendChild(conteudoRelatorio);
+    
+    // Adiciona relatório ao overlay e overlay ao body
+    overlay.appendChild(relatorio);
+    document.body.appendChild(overlay);
+}
+</script>
+
+</body>
+</html>

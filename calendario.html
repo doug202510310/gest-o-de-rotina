@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendário de Atividades</title>
+    <style>
+        :root {
+            --cor-alta: #ff7675;
+            --cor-media: #fdcb6e;
+            --cor-baixa: #74b9ff;
+            --cor-noticia: #a29bfe;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color:  rgb(76, 73, 73);
+        }
+        
+        h1, h2 {
+            color: white;
+            text-align: center;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color:black;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px 40px;
+        }
+        
+        /* Estilos do calendário */
+        .calendario-container {
+            margin-bottom: 30px;
+            background-color: #f8f9fa;
+        }
+        
+        .calendario-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .calendario-header h2 {
+            margin: 0;
+            color: #333;
+        }
+        
+        .btn-nav {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 15px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-nav:hover {
+            background-color: #2980b9;
+        }
+        
+        .calendario {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .calendario th {
+            background-color: #3498db;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+        
+        .calendario td {
+            border: 1px solid #ddd;
+            height: 100px;
+            width: 14.28%;
+            vertical-align: top;
+            padding: 5px;
+        }
+        
+        .dia {
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-align: right;
+        }
+        
+        .outro-mes {
+            color: #aaa;
+            background-color: #f9f9f9;
+        }
+        
+        .hoje {
+            background-color: #e8f4f8;
+        }
+        
+        /* Estilos das atividades */
+        .atividade {
+            padding: 5px;
+            margin: 2px 0;
+            border-radius: 3px;
+            font-size: 12px;
+            cursor: pointer;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .legenda-prioridade {
+          color: white;
+        }
+        .prioridade-alta {
+            background-color: var(--cor-alta);
+            color: white;
+        }
+        
+        .prioridade-media {
+            background-color: var(--cor-media);
+        }
+        
+        .prioridade-baixa {
+            background-color: var(--cor-baixa);
+            color: white;
+        }
+        
+        .noticia-aguardada {
+            background-color: var(--cor-noticia);
+            color: white;
+        }
+        
+        /* Estilos do formulário */
+        .formulario-container {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .formulario-titulo {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .form-group input, 
+        .form-group select, 
+        .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .btn-danger {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        
+        /* Legenda */
+        .legenda {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            color: white;
+        }
+        
+        .legenda-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .legenda-cor {
+            width: 15px;
+            height: 15px;
+            border-radius: 3px;
+        }
+        
+        /* Modal de detalhes */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-conteudo {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+        
+        .modal-header h3 {
+            margin: 0;
+        }
+        
+        .fechar-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        /* Botão flutuante de voltar */
+        .botao-voltar {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+            z-index: 90;
+            font-size: 24px;
+        }
+        
+        .botao-voltar:hover {
+            background-color: #2980b9;
+            transform: scale(1.1);
+        }
+        
+        /* Status de salvamento */
+        #status-salvamento {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            padding: 8px 15px;
+            border-radius: 4px;
+            background-color: rgba(0,0,0,0.7);
+            color: white;
+            font-size: 14px;
+            opacity: 0;
+            transition: opacity 0.5s;
+            z-index: 90;
+        }
+        
+        #status-salvamento.visivel {
+            opacity: 1;
+        }
+        /* Botão flutuante de voltar */
+        .botao-voltar {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+            z-index: 1000;
+            font-size: 24px;
+        }
+        .botao-voltar:hover {
+            background-color: #2980b9;
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Calendário de Atividades</h1>
+        
+        <!-- Legenda -->
+        <div class="legenda">
+            <div class="legenda-item">
+                <div class="legenda-cor" style="background-color: var(--cor-alta);"></div>
+                <span>Alta prioridade</span>
+            </div>
+            <div class="legenda-item">
+                <div class="legenda-cor" style="background-color: var(--cor-media);"></div>
+                <span>Média prioridade</span>
+            </div>
+            <div class="legenda-item">
+                <div class="legenda-cor" style="background-color: var(--cor-baixa);"></div>
+                <span>Baixa prioridade</span>
+            </div>
+            <div class="legenda-item">
+                <div class="legenda-cor" style="background-color: var(--cor-noticia);"></div>
+                <span>Notícia aguardada</span>
+            </div>
+        </div>
+        
+        <!-- Formulário para adicionar/editar atividades -->
+        <div class="formulario-container">
+            <h2 class="formulario-titulo" id="formulario-titulo">Adicionar Nova Atividade</h2>
+            <form id="atividade-form">
+                <input type="hidden" id="atividade-id">
+                <div class="form-group">
+                    <label for="atividade-titulo">Título:</label>
+                    <input type="text" id="atividade-titulo" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="atividade-data">Data:</label>
+                    <input type="date" id="atividade-data" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="atividade-tipo">Tipo:</label>
+                    <select id="atividade-tipo" required>
+                        <option value="alta">Alta prioridade</option>
+                        <option value="media">Média prioridade</option>
+                        <option value="baixa">Baixa prioridade</option>
+                        <option value="noticia">Notícia aguardada</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="atividade-descricao">Descrição:</label>
+                    <textarea id="atividade-descricao"></textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" id="limpar-form" class="btn btn-danger">Limpar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Calendário -->
+        <div class="calendario-container">
+            <div class="calendario-header">
+                <button class="btn-nav" id="mes-anterior">&lt; Anterior</button>
+                <h2 id="mes-ano">Junho 2025</h2>
+                <button class="btn-nav" id="proximo-mes">Próximo &gt;</button>
+            </div>
+            
+            <table class="calendario">
+                <thead>
+                    <tr>
+                        <th>Dom</th>
+                        <th>Seg</th>
+                        <th>Ter</th>
+                        <th>Qua</th>
+                        <th>Qui</th>
+                        <th>Sex</th>
+                        <th>Sáb</th>
+                    </tr>
+                </thead>
+                <tbody id="calendario-dias">
+                    <!-- Dias gerados via JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- Modal de detalhes da atividade -->
+    <div id="modal-detalhes" class="modal">
+        <div class="modal-conteudo">
+            <div class="modal-header">
+                <h3 id="modal-titulo">Detalhes da Atividade</h3>
+                <button class="fechar-modal">&times;</button>
+            </div>
+            <div id="modal-corpo">
+                <p><strong>Data:</strong> <span id="modal-data"></span></p>
+                <p><strong>Tipo:</strong> <span id="modal-tipo"></span></p>
+                <p><strong>Descrição:</strong></p>
+                <p id="modal-descricao"></p>
+                
+                <div style="margin-top: 20px; display: flex; justify-content: space-between;">
+                    <button id="editar-atividade" class="btn btn-primary">Editar</button>
+                    <button id="excluir-atividade" class="btn btn-danger">Excluir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+     <!-- Botão flutuante para voltar -->
+    <a href="index.html" class="botao-voltar" title="Voltar à página principal">⬅</a>
+
+    <!-- Status de salvamento -->
+    <div id="status-salvamento">Atividade salva!</div>
+
+    <script>
+        // Variáveis globais
+        let dataAtual = new Date();
+        let atividadeSelecionada = null;
+        let atividades = [];
+        
+        // Seleção de elementos DOM
+        const calendarioDias = document.getElementById('calendario-dias');
+        const mesAnoElement = document.getElementById('mes-ano');
+        const mesAnteriorBtn = document.getElementById('mes-anterior');
+        const proximoMesBtn = document.getElementById('proximo-mes');
+        const atividadeForm = document.getElementById('atividade-form');
+        const formularioTitulo = document.getElementById('formulario-titulo');
+        const atividadeIdInput = document.getElementById('atividade-id');
+        const atividadeTituloInput = document.getElementById('atividade-titulo');
+        const atividadeDataInput = document.getElementById('atividade-data');
+        const atividadeTipoSelect = document.getElementById('atividade-tipo');
+        const atividadeDescricaoTextarea = document.getElementById('atividade-descricao');
+        const limparFormBtn = document.getElementById('limpar-form');
+        const modalDetalhes = document.getElementById('modal-detalhes');
+        const modalTitulo = document.getElementById('modal-titulo');
+        const modalData = document.getElementById('modal-data');
+        const modalTipo = document.getElementById('modal-tipo');
+        const modalDescricao = document.getElementById('modal-descricao');
+        const fecharModalBtn = document.querySelector('.fechar-modal');
+        const editarAtividadeBtn = document.getElementById('editar-atividade');
+        const excluirAtividadeBtn = document.getElementById('excluir-atividade');
+        const statusSalvamento = document.getElementById('status-salvamento');
+        
+        // Funções auxiliares
+        function formatarData(data) {
+            return new Date(data).toLocaleDateString('pt-BR', { 
+                day: '2-digit', 
+                month: '2-digit', 
+                year: 'numeric' 
+            });
+        }
+        
+        function mostrarStatus(mensagem) {
+            statusSalvamento.innerText = mensagem;
+            statusSalvamento.classList.add('visivel');
+            
+            setTimeout(() => {
+                statusSalvamento.classList.remove('visivel');
+            }, 2000);
+        }
+        
+        // Carregar atividades do armazenamento local
+        function carregarAtividades() {
+            const atividadesSalvas = localStorage.getItem('atividades');
+            if (atividadesSalvas) {
+                atividades = JSON.parse(atividadesSalvas);
+            }
+        }
+        
+        // Salvar atividades no armazenamento local
+        function salvarAtividades() {
+            localStorage.setItem('atividades', JSON.stringify(atividades));
+        }
+        
+        // Funções do calendário
+        function gerarCalendario() {
+            // Limpar o conteúdo anterior
+            calendarioDias.innerHTML = '';
+            
+            // Atualizar o cabeçalho do mês e ano
+            const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+            mesAnoElement.textContent = `${meses[dataAtual.getMonth()]} ${dataAtual.getFullYear()}`;
+            
+            // Obter o primeiro dia do mês
+            const primeiroDia = new Date(dataAtual.getFullYear(), dataAtual.getMonth(), 1);
+            const diaDaSemana = primeiroDia.getDay(); // 0 = domingo, 1 = segunda, etc.
+            
+            // Obter o último dia do mês
+            const ultimoDia = new Date(dataAtual.getFullYear(), dataAtual.getMonth() + 1, 0);
+            const totalDias = ultimoDia.getDate();
+            
+            // Obter o último dia do mês anterior
+            const ultimoDiaMesAnterior = new Date(dataAtual.getFullYear(), dataAtual.getMonth(), 0).getDate();
+            
+            // Calcular dias a mostrar do mês anterior
+            let diasAnterior = diaDaSemana;
+            
+            // Calcular número total de células no calendário (máximo de 6 semanas)
+            const totalCelulas = Math.ceil((totalDias + diasAnterior) / 7) * 7;
+            
+            // Criar as células do calendário
+            let dataHoje = new Date();
+            let dia = 1;
+            let proximoDia = 1;
+            
+            for (let i = 0; i < totalCelulas / 7; i++) {
+                let row = document.createElement('tr');
+                
+                for (let j = 0; j < 7; j++) {
+                    let cell = document.createElement('td');
+                    let diaDiv = document.createElement('div');
+                    diaDiv.className = 'dia';
+                    
+                    // Células do mês anterior
+                    if (i === 0 && j < diasAnterior) {
+                        let diaAnterior = ultimoDiaMesAnterior - diasAnterior + j + 1;
+                        diaDiv.textContent = diaAnterior;
+                        cell.className = 'outro-mes';
+                        
+                        // Criar data para o dia do mês anterior
+                        let dataDiaCelula = new Date(dataAtual.getFullYear(), dataAtual.getMonth() - 1, diaAnterior);
+                        cell.dataset.data = dataDiaCelula.toISOString().split('T')[0];
+                    } 
+                    // Células do mês atual
+                    else if (dia <= totalDias) {
+                        diaDiv.textContent = dia;
+                        
+                        // Criar data para o dia do mês atual
+                        let dataDiaCelula = new Date(dataAtual.getFullYear(), dataAtual.getMonth(), dia);
+                        cell.dataset.data = dataDiaCelula.toISOString().split('T')[0];
+                        
+                        // Marcar o dia atual
+                        if (dia === dataHoje.getDate() && 
+                            dataAtual.getMonth() === dataHoje.getMonth() && 
+                            dataAtual.getFullYear() === dataHoje.getFullYear()) {
+                            cell.className = 'hoje';
+                        }
+                        
+                        dia++;
+                    } 
+                    // Células do próximo mês
+                    else {
+                        diaDiv.textContent = proximoDia;
+                        cell.className = 'outro-mes';
+                        
+                        // Criar data para o dia do próximo mês
+                        let dataDiaCelula = new Date(dataAtual.getFullYear(), dataAtual.getMonth() + 1, proximoDia);
+                        cell.dataset.data = dataDiaCelula.toISOString().split('T')[0];
+                        
+                        proximoDia++;
+                    }
+                    
+                    cell.appendChild(diaDiv);
+                    row.appendChild(cell);
+                    
+                    // Adicionar evento de clique para selecionar a data
+                    cell.addEventListener('click', (e) => {
+                        // Se o clique foi diretamente em uma atividade, não mudar a data
+                        if (!e.target.classList.contains('atividade')) {
+                            limparFormulario();
+                            atividadeDataInput.value = cell.dataset.data;
+                            atividadeTituloInput.focus();
+                        }
+                    });
+                }
+                
+                calendarioDias.appendChild(row);
+            }
+            
+            // Mostrar as atividades no calendário
+            mostrarAtividades();
+        }
+        
+        function mostrarAtividades() {
+            // Limpar atividades existentes
+            document.querySelectorAll('.atividade').forEach(el => el.remove());
+            
+            // Mostrar as atividades em suas respectivas datas
+            atividades.forEach(atividade => {
+                // Extrair apenas a parte da data (YYYY-MM-DD), ignorando o horário
+                const dataAtividade = atividade.data.split('T')[0];
+                
+                const celula = document.querySelector(`td[data-data="${dataAtividade}"]`);
+                if (celula) {
+                    const atividadeEl = document.createElement('div');
+                    atividadeEl.className = `atividade prioridade-${atividade.tipo}`;
+                    atividadeEl.textContent = atividade.titulo;
+                    atividadeEl.dataset.id = atividade.id;
+                    
+                    // Adicionar evento de clique para mostrar detalhes
+                    atividadeEl.addEventListener('click', (e) => {
+                        e.stopPropagation(); // Evitar que o evento se propague para a célula
+                        mostrarDetalhesAtividade(atividade.id);
+                    });
+                    
+                    celula.appendChild(atividadeEl);
+                }
+            });
+        }
+        
+        // Funções para gerenciar atividades
+        function limparFormulario() {
+            atividadeForm.reset();
+            atividadeIdInput.value = '';
+            formularioTitulo.textContent = 'Adicionar Nova Atividade';
+            atividadeSelecionada = null;
+        }
+        
+        function adicionarOuAtualizarAtividade(e) {
+            e.preventDefault();
+            
+            const titulo = atividadeTituloInput.value.trim();
+            const data = atividadeDataInput.value;
+            const tipo = atividadeTipoSelect.value;
+            const descricao = atividadeDescricaoTextarea.value.trim();
+            const id = atividadeIdInput.value || Date.now().toString();
+            
+            if (!titulo || !data) {
+                mostrarStatus('Preencha o título e a data!');
+                return;
+            }
+            
+            // Verificar se é para atualizar ou adicionar
+            if (atividadeIdInput.value) {
+                // Atualizar atividade existente
+                const index = atividades.findIndex(a => a.id == id);
+                if (index !== -1) {
+                    atividades[index] = { id, titulo, data, tipo, descricao };
+                    mostrarStatus('Atividade atualizada!');
+                }
+            } else {
+                // Adicionar nova atividade
+                atividades.push({ id, titulo, data, tipo, descricao });
+                mostrarStatus('Atividade adicionada!');
+            }
+            
+            // Salvar e atualizar a visualização
+            salvarAtividades();
+            gerarCalendario();
+            limparFormulario();
+        }
+        
+        function mostrarDetalhesAtividade(id) {
+            const atividade = atividades.find(a => a.id == id);
+            if (atividade) {
+                atividadeSelecionada = atividade;
+                
+                // Preencher o modal com os dados da atividade
+                modalTitulo.textContent = atividade.titulo;
+                modalData.textContent = formatarData(atividade.data);
+                
+                // Traduzir o tipo
+                const tipos = {
+                    'alta': 'Alta prioridade',
+                    'media': 'Média prioridade',
+                    'baixa': 'Baixa prioridade',
+                    'noticia': 'Notícia aguardada'
+                };
+                modalTipo.textContent = tipos[atividade.tipo] || atividade.tipo;
+                
+                // Definir a cor de fundo do tipo
+                modalTipo.className = '';
+                modalTipo.classList.add(`prioridade-${atividade.tipo}`);
+                modalTipo.style.padding = '3px 6px';
+                modalTipo.style.borderRadius = '3px';
+                modalTipo.style.display = 'inline-block';
+                
+                modalDescricao.textContent = atividade.descricao || 'Sem descrição.';
+                
+                // Mostrar o modal
+                modalDetalhes.style.display = 'flex';
+            }
+        }
+        
+        function editarAtividade() {
+            if (atividadeSelecionada) {
+                // Preencher o formulário com os dados da atividade
+                atividadeIdInput.value = atividadeSelecionada.id;
+                atividadeTituloInput.value = atividadeSelecionada.titulo;
+                atividadeDataInput.value = atividadeSelecionada.data;
+                atividadeTipoSelect.value = atividadeSelecionada.tipo;
+                atividadeDescricaoTextarea.value = atividadeSelecionada.descricao || '';
+                
+                formularioTitulo.textContent = 'Editar Atividade';
+                
+                // Fechar o modal
+                modalDetalhes.style.display = 'none';
+                
+                // Scroll até o formulário
+                document.querySelector('.formulario-container').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+        
+        function excluirAtividade() {
+            if (atividadeSelecionada && confirm('Tem certeza que deseja excluir esta atividade?')) {
+                const index = atividades.findIndex(a => a.id == atividadeSelecionada.id);
+                if (index !== -1) {
+                    atividades.splice(index, 1);
+                    salvarAtividades();
+                    gerarCalendario();
+                    mostrarStatus('Atividade excluída!');
+                    
+                    // Fechar o modal
+                    modalDetalhes.style.display = 'none';
+                }
+            }
+        }
+        
+        // Event listeners
+        atividadeForm.addEventListener('submit', adicionarOuAtualizarAtividade);
+        limparFormBtn.addEventListener('click', limparFormulario);
+        
+        mesAnteriorBtn.addEventListener('click', () => {
+            dataAtual.setMonth(dataAtual.getMonth() - 1);
+            gerarCalendario();
+        });
+        
+        proximoMesBtn.addEventListener('click', () => {
+            dataAtual.setMonth(dataAtual.getMonth() + 1);
+            gerarCalendario();
+        });
+        
+        fecharModalBtn.addEventListener('click', () => {
+            modalDetalhes.style.display = 'none';
+        });
+        
+        editarAtividadeBtn.addEventListener('click', editarAtividade);
+        excluirAtividadeBtn.addEventListener('click', excluirAtividade);
+        
+        // Fechar o modal ao clicar fora dele
+        modalDetalhes.addEventListener('click', (e) => {
+            if (e.target === modalDetalhes) {
+                modalDetalhes.style.display = 'none';
+            }
+        });
+        
+        // Inicializar
+        window.addEventListener('load', () => {
+            // Definir a data de hoje como padrão no formulário
+            const hoje = new Date().toISOString().split('T')[0];
+            atividadeDataInput.value = hoje;
+            
+            // Carregar atividades e gerar calendário
+            carregarAtividades();
+            gerarCalendario();
+        });
+    </script>
+</body>
+</html>

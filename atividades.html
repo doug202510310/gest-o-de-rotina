@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciamento de Atividades</title>
+    <style>
+        :root {
+            --cor-alta: #ff7675;
+            --cor-media: #fdcb6e;
+            --cor-baixa: #74b9ff;
+            --cor-noticia: #a29bfe;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: rgb(32, 32, 32);
+        }
+        
+        h1, h2, h3 {
+            color: white;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .colunas {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        
+        .coluna {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 15px;
+        }
+        
+        .coluna-alta h2 {
+            color: white;
+            background-color: var(--cor-alta);
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 0;
+        }
+        
+        .coluna-media h2 {
+            color: #333;
+            background-color: var(--cor-media);
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 0;
+        }
+        
+        .coluna-baixa h2 {
+            color: white;
+            background-color: var(--cor-baixa);
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 0;
+        }
+        
+        .coluna-noticia h2 {
+            color: white;
+            background-color: var(--cor-noticia);
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 0;
+        }
+        
+        .atividade {
+            margin-bottom: 15px;
+            padding: 12px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            position: relative;
+        }
+        
+        .atividade:last-child {
+            margin-bottom: 0;
+        }
+        
+        .atividade-titulo {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .atividade-data {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .atividade-descricao {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .sem-atividades {
+            text-align: center;
+            padding: 20px;
+            color: #888;
+            font-style: italic;
+        }
+        
+        .acoes {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+            margin-top: 10px;
+        }
+        
+        .btn {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background-color 0.2s;
+        }
+        
+        .btn-concluir {
+            background-color: #27ae60;
+            color: white;
+        }
+        
+        .btn-concluir:hover {
+            background-color: #219653;
+        }
+        
+        .btn-adiar {
+            background-color: #f39c12;
+            color: white;
+        }
+        
+        .btn-adiar:hover {
+            background-color: #e67e22;
+        }
+        
+        .btn-ignorar {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .btn-ignorar:hover {
+            background-color: #c0392b;
+        }
+        
+        /* Modal para adiar */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-conteudo {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 300px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        .modal-titulo {
+            margin-top: 0;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+        
+        .modal-form {
+            margin-bottom: 15px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        .modal-acoes {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        /* Botão flutuante de voltar */
+        .botao-voltar {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+            z-index: 90;
+            font-size: 24px;
+        }
+        
+        .botao-voltar:hover {
+            background-color: #2980b9;
+            transform: scale(1.1);
+        }
+        
+        /* Status de notificação */
+        #status-notificacao {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            padding: 10px 15px;
+            border-radius: 4px;
+            background-color: rgba(0,0,0,0.7);
+            color: white;
+            font-size: 14px;
+            opacity: 0;
+            transition: opacity 0.5s;
+            z-index: 90;
+        }
+        
+        #status-notificacao.visivel {
+            opacity: 1;
+        }
+        
+        /* Filtros e busca */
+        .filtros {
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .filtro-grupo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .busca {
+            flex-grow: 1;
+            position: relative;
+        }
+        
+        .busca input {
+            width: 100%;
+            padding: 8px 35px 8px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        .busca-icone {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+        }
+        
+        .contagem-atividades {
+            background-color: #f9f9f9;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Gerenciamento de Atividades</h1>
+        
+        <div class="filtros">
+            <div class="filtro-grupo">
+                <label for="filtro-data">Filtrar por data:</label>
+                <input type="date" id="filtro-data">
+            </div>
+            <div class="filtro-grupo">
+                <label>Mostrar:</label>
+                <select id="filtro-estado">
+                    <option value="todas">Todas</option>
+                    <option value="pendentes">Pendentes</option>
+                    <option value="hoje">Hoje</option>
+                    <option value="atrasadas">Atrasadas</option>
+                    <option value="futuras">Futuras</option>
+                </select>
+            </div>
+            <div class="busca">
+                <input type="text" id="busca" placeholder="Buscar atividades...">
+                <span class="busca-icone">🔍</span>
+            </div>
+        </div>
+        
+        <div class="colunas">
+            <div class="coluna coluna-alta">
+                <h2>Alta Prioridade <span class="contagem-atividades" id="contagem-alta">0</span></h2>
+                <div id="atividades-alta"></div>
+            </div>
+            
+            <div class="coluna coluna-media">
+                <h2>Média Prioridade <span class="contagem-atividades" id="contagem-media">0</span></h2>
+                <div id="atividades-media"></div>
+            </div>
+            
+            <div class="coluna coluna-baixa">
+                <h2>Baixa Prioridade <span class="contagem-atividades" id="contagem-baixa">0</span></h2>
+                <div id="atividades-baixa"></div>
+            </div>
+            
+            <div class="coluna coluna-noticia">
+                <h2>Notícias Aguardadas <span class="contagem-atividades" id="contagem-noticia">0</span></h2>
+                <div id="atividades-noticia"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal para adiar atividade -->
+    <div id="modal-adiar" class="modal">
+        <div class="modal-conteudo">
+            <h3 class="modal-titulo">Adiar Atividade</h3>
+            <div class="modal-form">
+                <div class="form-group">
+                    <label for="nova-data">Nova data:</label>
+                    <input type="date" id="nova-data" required>
+                </div>
+            </div>
+            <div class="modal-acoes">
+                <button id="cancelar-adiar" class="btn btn-ignorar">Cancelar</button>
+                <button id="confirmar-adiar" class="btn btn-adiar">Confirmar</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Botão de voltar -->
+    <a href="index.html" class="botao-voltar" title="Voltar à página principal">⬅</a>
+    
+    <!-- Status de notificação -->
+    <div id="status-notificacao">Atividade concluída!</div>
+    
+    <script>
+        // Elementos do DOM
+        const atividadesAlta = document.getElementById('atividades-alta');
+        const atividadesMedia = document.getElementById('atividades-media');
+        const atividadesBaixa = document.getElementById('atividades-baixa');
+        const atividadesNoticia = document.getElementById('atividades-noticia');
+        const contagemAlta = document.getElementById('contagem-alta');
+        const contagemMedia = document.getElementById('contagem-media');
+        const contagemBaixa = document.getElementById('contagem-baixa');
+        const contagemNoticia = document.getElementById('contagem-noticia');
+        const modalAdiar = document.getElementById('modal-adiar');
+        const novaDataInput = document.getElementById('nova-data');
+        const confirmarAdiarBtn = document.getElementById('confirmar-adiar');
+        const cancelarAdiarBtn = document.getElementById('cancelar-adiar');
+        const statusNotificacao = document.getElementById('status-notificacao');
+        const filtroData = document.getElementById('filtro-data');
+        const filtroEstado = document.getElementById('filtro-estado');
+        const buscaInput = document.getElementById('busca');
+        
+        // Variáveis globais
+        let atividades = [];
+        let atividadeParaAdiar = null;
+        
+        // Carregar atividades do localStorage
+        function carregarAtividades() {
+            const atividadesSalvas = localStorage.getItem('atividades');
+            if (atividadesSalvas) {
+                atividades = JSON.parse(atividadesSalvas);
+                
+                // Corrigir todas as datas para evitar problemas de fuso horário
+                atividades.forEach(atividade => {
+                    // Verificar se a data não tem o ajuste de horário
+                    if (atividade.data && !atividade.data.includes('T12:00:00')) {
+                        // Adicionar o horário meio-dia para evitar problemas de fuso
+                        const [ano, mes, dia] = atividade.data.split('T')[0].split('-');
+                        atividade.data = `${ano}-${mes}-${dia}T12:00:00`;
+                    }
+                });
+                
+                // Salvar as datas corrigidas de volta ao localStorage
+                localStorage.setItem('atividades', JSON.stringify(atividades));
+                
+                filtrarEExibirAtividades();
+            } else {
+                atividades = [];
+                mostrarMensagemSemAtividades();
+            }
+        }
+        
+        // Salvar atividades no localStorage
+        function salvarAtividades() {
+            localStorage.setItem('atividades', JSON.stringify(atividades));
+        }
+        
+        // Mostrar mensagem quando não há atividades
+        function mostrarMensagemSemAtividades() {
+            const mensagem = '<div class="sem-atividades">Nenhuma atividade encontrada</div>';
+            atividadesAlta.innerHTML = mensagem;
+            atividadesMedia.innerHTML = mensagem;
+            atividadesBaixa.innerHTML = mensagem;
+            atividadesNoticia.innerHTML = mensagem;
+            
+            atualizarContagens();
+        }
+        
+        // Filtrar e exibir atividades
+        function filtrarEExibirAtividades() {
+            // Obter valores dos filtros
+            const dataFiltro = filtroData.value;
+            const estadoFiltro = filtroEstado.value;
+            const termoBusca = buscaInput.value.toLowerCase().trim();
+            
+            // Hoje para comparação
+            const hoje = new Date();
+            hoje.setHours(0, 0, 0, 0);
+            
+            // Filtrar atividades
+            const atividadesFiltradas = atividades.filter(atividade => {
+                // Filtro por data
+                if (dataFiltro && atividade.data !== dataFiltro) {
+                    return false;
+                }
+                
+                // Filtro por estado (pendente, hoje, atrasado, futuro)
+                const dataAtividade = new Date(atividade.data);
+                dataAtividade.setHours(0, 0, 0, 0);
+                
+                if (estadoFiltro === 'hoje' && dataAtividade.getTime() !== hoje.getTime()) {
+                    return false;
+                } else if (estadoFiltro === 'atrasadas' && dataAtividade >= hoje) {
+                    return false;
+                } else if (estadoFiltro === 'futuras' && dataAtividade <= hoje) {
+                    return false;
+                }
+                
+                // Filtro por termo de busca
+                if (termoBusca) {
+                    const titulo = atividade.titulo.toLowerCase();
+                    const descricao = (atividade.descricao || '').toLowerCase();
+                    if (!titulo.includes(termoBusca) && !descricao.includes(termoBusca)) {
+                        return false;
+                    }
+                }
+                
+                return true;
+            });
+            
+            // Separar por tipo
+            const alta = atividadesFiltradas.filter(a => a.tipo === 'alta');
+            const media = atividadesFiltradas.filter(a => a.tipo === 'media');
+            const baixa = atividadesFiltradas.filter(a => a.tipo === 'baixa');
+            const noticia = atividadesFiltradas.filter(a => a.tipo === 'noticia');
+            
+            // Atualizar contagens
+            contagemAlta.textContent = alta.length;
+            contagemMedia.textContent = media.length;
+            contagemBaixa.textContent = baixa.length;
+            contagemNoticia.textContent = noticia.length;
+            
+            // Exibir ou mostrar mensagem de vazio
+            exibirListaAtividades(atividadesAlta, alta);
+            exibirListaAtividades(atividadesMedia, media);
+            exibirListaAtividades(atividadesBaixa, baixa);
+            exibirListaAtividades(atividadesNoticia, noticia);
+        }
+        
+        // Exibir lista de atividades em um container
+        function exibirListaAtividades(container, listaAtividades) {
+            if (listaAtividades.length === 0) {
+                container.innerHTML = '<div class="sem-atividades">Nenhuma atividade encontrada</div>';
+                return;
+            }
+            
+            // Ordenar por data (mais próximas primeiro)
+            listaAtividades.sort((a, b) => new Date(a.data) - new Date(b.data));
+            
+            // Gerar HTML
+            let html = '';
+            listaAtividades.forEach(atividade => {
+                const dataFormatada = formatarData(atividade.data);
+                const hoje = new Date();
+                hoje.setHours(0, 0, 0, 0);
+                const dataAtividade = new Date(atividade.data);
+                dataAtividade.setHours(0, 0, 0, 0);
+                
+                let statusClass = '';
+                if (dataAtividade.getTime() === hoje.getTime()) {
+                    statusClass = 'atividade-hoje';
+                } else if (dataAtividade < hoje) {
+                    statusClass = 'atividade-atrasada';
+                }
+                
+                html += `
+                    <div class="atividade ${statusClass}" data-id="${atividade.id}">
+                        <div class="atividade-titulo">${atividade.titulo}</div>
+                        <div class="atividade-data">${dataFormatada}</div>
+                        <div class="atividade-descricao">${atividade.descricao || ''}</div>
+                        <div class="acoes">
+                            <button class="btn btn-concluir" onclick="concluirAtividade('${atividade.id}')">Concluir</button>
+                            <button class="btn btn-adiar" onclick="abrirModalAdiar('${atividade.id}')">Adiar</button>
+                            <button class="btn btn-ignorar" onclick="ignorarAtividade('${atividade.id}')">Ignorar</button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        // Atualizar contagens
+        function atualizarContagens() {
+            const alta = atividades.filter(a => a.tipo === 'alta').length;
+            const media = atividades.filter(a => a.tipo === 'media').length;
+            const baixa = atividades.filter(a => a.tipo === 'baixa').length;
+            const noticia = atividades.filter(a => a.tipo === 'noticia').length;
+            
+            contagemAlta.textContent = alta;
+            contagemMedia.textContent = media;
+            contagemBaixa.textContent = baixa;
+            contagemNoticia.textContent = noticia;
+        }
+        
+        // Formatar data
+        function formatarData(data) {
+            if (!data) return 'Data não definida';
+            
+            const d = new Date(data);
+            return d.toLocaleDateString('pt-BR', { 
+                weekday: 'short', 
+                day: '2-digit', 
+                month: '2-digit', 
+                year: 'numeric' 
+            });
+        }
+        
+        // Mostrar notificação
+        function mostrarNotificacao(mensagem) {
+            statusNotificacao.innerText = mensagem;
+            statusNotificacao.classList.add('visivel');
+            
+            setTimeout(() => {
+                statusNotificacao.classList.remove('visivel');
+            }, 2000);
+        }
+        
+        // Concluir atividade (remover do armazenamento)
+        function concluirAtividade(id) {
+            const index = atividades.findIndex(a => a.id === id);
+            if (index !== -1) {
+                // Registrar a atividade concluída antes de removê-la
+                const atividadeConcluida = atividades[index];
+                
+                // Buscar atividades concluídas existentes
+                let atividadesConcluidas = JSON.parse(localStorage.getItem('atividadesConcluidas') || '{"items":[], "ultimaAtualizacao": ""}');
+                
+                // Adicionar esta atividade à lista de concluídas
+                atividadeConcluida.dataCompleta = new Date().toISOString();
+                atividadesConcluidas.items.push(atividadeConcluida);
+                atividadesConcluidas.ultimaAtualizacao = new Date().toISOString();
+                
+                // Salvar no localStorage
+                localStorage.setItem('atividadesConcluidas', JSON.stringify(atividadesConcluidas));
+                
+                // Agora remove da lista de atividades
+                atividades.splice(index, 1);
+                salvarAtividades();
+                filtrarEExibirAtividades();
+                
+                mostrarNotificacao(`Atividade "${atividadeConcluida.titulo}" concluída com sucesso!`);
+            }
+        }
+        
+        // Abrir modal para adiar atividade
+        function abrirModalAdiar(id) {
+            atividadeParaAdiar = atividades.find(a => a.id === id);
+            if (atividadeParaAdiar) {
+                // Preencher com a data atual como mínimo
+                const hoje = new Date().toISOString().split('T')[0];
+                novaDataInput.min = hoje;
+                novaDataInput.value = atividadeParaAdiar.data;
+                modalAdiar.style.display = 'flex';
+            }
+        }
+        
+        // Adiar atividade (mudar data)
+        function adiarAtividade() {
+            if (!atividadeParaAdiar) return;
+            
+            const novaData = novaDataInput.value;
+            if (!novaData) {
+                mostrarNotificacao('Por favor, selecione uma data válida!');
+                return;
+            }
+            
+            // Ajustar a data para meio-dia para evitar problemas de fuso horário
+            const [ano, mes, dia] = novaData.split('-');
+            const dataAjustada = `${ano}-${mes}-${dia}T12:00:00`; 
+            
+            const index = atividades.findIndex(a => a.id === atividadeParaAdiar.id);
+            if (index !== -1) {
+                atividades[index].data = dataAjustada;
+                salvarAtividades();
+                filtrarEExibirAtividades();
+                mostrarNotificacao(`Atividade "${atividadeParaAdiar.titulo}" adiada para ${formatarData(dataAjustada)}`);
+                fecharModalAdiar();
+            }
+        }
+        
+        // Fechar modal de adiamento
+        function fecharModalAdiar() {
+            modalAdiar.style.display = 'none';
+            atividadeParaAdiar = null;
+        }
+        
+        // Ignorar atividade (remover do armazenamento)
+        function ignorarAtividade(id) {
+            const index = atividades.findIndex(a => a.id === id);
+            if (index !== -1) {
+                if (confirm('Tem certeza que deseja ignorar esta atividade? Ela será removida permanentemente.')) {
+                    const atividade = atividades[index];
+                    atividades.splice(index, 1);
+                    salvarAtividades();
+                    filtrarEExibirAtividades();
+                    mostrarNotificacao(`Atividade "${atividade.titulo}" ignorada!`);
+                }
+            }
+        }
+        
+        // Event Listeners
+        confirmarAdiarBtn.addEventListener('click', adiarAtividade);
+        cancelarAdiarBtn.addEventListener('click', fecharModalAdiar);
+        
+        // Fechar o modal ao clicar fora dele
+        modalAdiar.addEventListener('click', (e) => {
+            if (e.target === modalAdiar) {
+                fecharModalAdiar();
+            }
+        });
+        
+        // Eventos de filtro
+        filtroData.addEventListener('change', filtrarEExibirAtividades);
+        filtroEstado.addEventListener('change', filtrarEExibirAtividades);
+        buscaInput.addEventListener('input', filtrarEExibirAtividades);
+        
+        // Carregar atividades ao iniciar
+        window.addEventListener('load', carregarAtividades);
+    </script>
+</body>
+</html>

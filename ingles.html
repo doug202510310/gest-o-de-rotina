@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocabulário de Inglês</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: rgb(76, 73, 73);
+            color: #333;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .form-container {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+        
+        .button-row {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .btn-danger {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .btn-secondary {
+            background-color: #95a5a6;
+            color: white;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        
+        .search-container {
+            margin-bottom: 20px;
+        }
+        
+        .search-container input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .empty-message {
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .btn-small {
+            padding: 5px 8px;
+            font-size: 12px;
+        }
+        
+        .status-message {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 4px;
+            display: none;
+        }
+        
+        /* Botão flutuante de voltar */
+        .botao-voltar {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+            z-index: 90;
+            font-size: 24px;
+        }
+        
+        .botao-voltar:hover {
+            background-color: #2980b9;
+            transform: scale(1.1);
+        }
+        
+        .statistics {
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            padding: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .highlight {
+            background-color: #ffffcc;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Meu Vocabulário de Inglês</h1>
+        
+        <div class="form-container">
+            <form id="vocab-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="english-word">Palavra em Inglês:</label>
+                        <input type="text" id="english-word" placeholder="Ex: Actually" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="portuguese-meaning">Significado em Português:</label>
+                        <input type="text" id="portuguese-meaning" placeholder="Ex: Na verdade" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="example-sentence">Frase de Exemplo:</label>
+                    <textarea id="example-sentence" placeholder="Ex: I actually prefer tea to coffee."></textarea>
+                </div>
+                
+                <div class="button-row">
+                    <button type="button" id="clear-btn" class="btn-secondary">Limpar</button>
+                    <button type="submit" class="btn-primary">Adicionar Palavra</button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="Buscar palavras...">
+        </div>
+        
+        <div class="statistics">
+            <span id="word-count">0</span> palavras no seu vocabulário
+        </div>
+        
+        <table id="vocabulary-table">
+            <thead>
+                <tr>
+                    <th>Palavra</th>
+                    <th>Significado</th>
+                    <th>Frase de Exemplo</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody id="vocabulary-list">
+                <!-- Palavras serão adicionadas aqui -->
+            </tbody>
+        </table>
+        
+        <div id="empty-message" class="empty-message">
+            Seu vocabulário está vazio. Adicione algumas palavras!
+        </div>
+    </div>
+    
+    <!-- Botão de voltar -->
+    <a href="index.html" class="botao-voltar" title="Voltar à página principal">⬅</a>
+    
+    <div id="status-message" class="status-message"></div>
+    
+    <script>
+        // Elementos DOM
+        const form = document.getElementById('vocab-form');
+        const englishWordInput = document.getElementById('english-word');
+        const portugueseMeaningInput = document.getElementById('portuguese-meaning');
+        const exampleSentenceInput = document.getElementById('example-sentence');
+        const clearBtn = document.getElementById('clear-btn');
+        const vocabularyList = document.getElementById('vocabulary-list');
+        const emptyMessage = document.getElementById('empty-message');
+        const searchInput = document.getElementById('search-input');
+        const wordCountElement = document.getElementById('word-count');
+        const statusMessage = document.getElementById('status-message');
+        
+        // Array para armazenar o vocabulário
+        let vocabulary = [];
+        let editingIndex = -1;
+        
+        // 10 palavras comuns em inglês para começar
+        const initialVocabulary = [
+            {
+                word: "Actually",
+                meaning: "Na verdade",
+                example: "I actually finished the project yesterday."
+            },
+            {
+                word: "Rather",
+                meaning: "Bastante/Preferivelmente",
+                example: "I would rather stay at home than go to the party."
+            },
+            {
+                word: "Perhaps",
+                meaning: "Talvez",
+                example: "Perhaps we should try a different approach."
+            },
+            {
+                word: "Though",
+                meaning: "Embora/Entretanto",
+                example: "I like him, though I don't agree with his opinions."
+            },
+            {
+                word: "Unless",
+                meaning: "A menos que",
+                example: "We won't succeed unless we work together."
+            },
+            {
+                word: "Quite",
+                meaning: "Bastante",
+                example: "The movie was quite interesting."
+            },
+            {
+                word: "Indeed",
+                meaning: "De fato/Realmente",
+                example: "It is, indeed, a difficult situation."
+            },
+            {
+                word: "Whether",
+                meaning: "Se/Caso",
+                example: "I don't know whether I should accept the job offer."
+            },
+            {
+                word: "Whatsoever",
+                meaning: "Qualquer/Algum (negativo)",
+                example: "I have no doubt whatsoever about your abilities."
+            },
+            {
+                word: "Otherwise",
+                meaning: "De outra forma/Caso contrário",
+                example: "You should leave now; otherwise, you'll miss your train."
+            }
+        ];
+        
+        // Carregar vocabulário do localStorage ou usar as palavras iniciais
+        function loadVocabulary() {
+            const savedVocabulary = localStorage.getItem('vocabulary');
+            
+            if (savedVocabulary) {
+                vocabulary = JSON.parse(savedVocabulary);
+            } else {
+                // Usar as palavras iniciais apenas se não houver dados salvos
+                vocabulary = [...initialVocabulary];
+                saveVocabulary();
+            }
+            
+            displayVocabulary();
+            updateWordCount();
+        }
+        
+        // Salvar vocabulário no localStorage
+        function saveVocabulary() {
+            localStorage.setItem('vocabulary', JSON.stringify(vocabulary));
+            updateWordCount();
+        }
+        
+        // Exibir o vocabulário na tabela
+        function displayVocabulary(filteredList = null) {
+            const list = filteredList || vocabulary;
+            
+            if (list.length === 0) {
+                vocabularyList.innerHTML = '';
+                emptyMessage.style.display = 'block';
+                return;
+            }
+            
+            emptyMessage.style.display = 'none';
+            
+            // Ordenar por ordem alfabética
+            const sortedList = [...list].sort((a, b) => a.word.localeCompare(b.word));
+            
+            vocabularyList.innerHTML = sortedList.map((item, index) => {
+                const originalIndex = vocabulary.findIndex(vocabItem => 
+                    vocabItem.word === item.word && 
+                    vocabItem.meaning === item.meaning
+                );
+                
+                return `
+                    <tr>
+                        <td>${item.word}</td>
+                        <td>${item.meaning}</td>
+                        <td>${item.example || ''}</td>
+                        <td class="actions">
+                            <button onclick="editWord(${originalIndex})" class="btn-small btn-primary">Editar</button>
+                            <button onclick="deleteWord(${originalIndex})" class="btn-small btn-danger">Excluir</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+        
+        // Adicionar uma nova palavra
+        function addWord(event) {
+            event.preventDefault();
+            
+            const word = englishWordInput.value.trim();
+            const meaning = portugueseMeaningInput.value.trim();
+            const example = exampleSentenceInput.value.trim();
+            
+            if (!word || !meaning) {
+                showStatus('Por favor, preencha a palavra e o significado');
+                return;
+            }
+            
+            if (editingIndex >= 0) {
+                // Editar palavra existente
+                vocabulary[editingIndex] = { word, meaning, example };
+                showStatus('Palavra atualizada com sucesso!');
+                editingIndex = -1;
+            } else {
+                // Adicionar nova palavra
+                vocabulary.push({ word, meaning, example });
+                showStatus('Palavra adicionada com sucesso!');
+            }
+            
+            saveVocabulary();
+            displayVocabulary();
+            clearForm();
+        }
+        
+        // Editar uma palavra
+        function editWord(index) {
+            const item = vocabulary[index];
+            
+            englishWordInput.value = item.word;
+            portugueseMeaningInput.value = item.meaning;
+            exampleSentenceInput.value = item.example || '';
+            
+            editingIndex = index;
+            englishWordInput.focus();
+            
+            // Mudar o texto do botão submit
+            form.querySelector('button[type="submit"]').textContent = 'Atualizar Palavra';
+        }
+        
+        // Excluir uma palavra
+        function deleteWord(index) {
+            if (confirm('Tem certeza que deseja excluir esta palavra?')) {
+                vocabulary.splice(index, 1);
+                saveVocabulary();
+                displayVocabulary();
+                showStatus('Palavra excluída com sucesso!');
+            }
+        }
+        
+        // Limpar o formulário
+        function clearForm() {
+            form.reset();
+            editingIndex = -1;
+            form.querySelector('button[type="submit"]').textContent = 'Adicionar Palavra';
+        }
+        
+        // Buscar palavras
+        function searchVocabulary() {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            
+            if (!searchTerm) {
+                displayVocabulary();
+                return;
+            }
+            
+            const filtered = vocabulary.filter(item => 
+                item.word.toLowerCase().includes(searchTerm) || 
+                item.meaning.toLowerCase().includes(searchTerm) || 
+                (item.example && item.example.toLowerCase().includes(searchTerm))
+            );
+            
+            displayVocabulary(filtered);
+        }
+        
+        // Atualizar contagem de palavras
+        function updateWordCount() {
+            wordCountElement.textContent = vocabulary.length;
+        }
+        
+        // Exibir mensagem de status
+        function showStatus(message) {
+            statusMessage.textContent = message;
+            statusMessage.style.display = 'block';
+            
+            setTimeout(() => {
+                statusMessage.style.display = 'none';
+            }, 3000);
+        }
+        
+        // Event listeners
+        form.addEventListener('submit', addWord);
+        clearBtn.addEventListener('click', clearForm);
+        searchInput.addEventListener('input', searchVocabulary);
+        
+        // Inicializar
+        window.addEventListener('load', loadVocabulary);
+    </script>
+</body>
+</html>
